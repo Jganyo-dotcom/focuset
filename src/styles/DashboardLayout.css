@@ -156,8 +156,14 @@
 
 /* SIDEBAR */
 .sidebar {
-  width: 260px;
-  flex-shrink: 0;
+  z-index: 1000;
+}
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 900;
 }
 
 /* MAIN CONTENT */
