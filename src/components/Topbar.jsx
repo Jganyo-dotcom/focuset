@@ -71,11 +71,18 @@
 
 // src/components/Topbar.jsx
 import { useState, useEffect } from "react";
-import "../styles/topbarr.css";
+import "../styles/topbarr.css"; // make sure the filename matches exactly (case-sensitive!)
 
 export default function Topbar() {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [search, setSearch] = useState("");
+
+  // Handle sidebar toggle
+  const handleMenuClick = () => {
+    console.log("Menu clicked!");
+    // You can add sidebar toggle logic here
+  };
 
   // Load user from localStorage
   useEffect(() => {
@@ -106,7 +113,7 @@ export default function Topbar() {
         <button
           className="menu-btn"
           aria-label="Toggle sidebar"
-          onClick={onMenuClick}
+          onClick={handleMenuClick}
         >
           ☰
         </button>
@@ -137,7 +144,7 @@ export default function Topbar() {
           aria-expanded={open}
           onClick={() => setOpen((s) => !s)}
         >
-          <span className="hamburger-icon">☰</span>
+          <span className="hamburger-icon"></span>
         </button>
       </div>
     </header>

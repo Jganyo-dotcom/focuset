@@ -187,6 +187,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
   const handleLogout = () => {
     localStorage.removeItem("isAuth");
+    localStorage.removeItem("token");
     navigate("/signin");
     onClose?.();
   };
