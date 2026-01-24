@@ -62,7 +62,7 @@ body,
 /* Adjust navbar for smaller screens (keep existing mobile behavior) */
 @media (max-width: 1024px) {
   :root {
-    --navbar-height: 64px;
+    --navbar-height: 20px;
   }
   body,
   .landing,
@@ -153,7 +153,7 @@ body,
   .landing,
   .main-wrapper,
   .page {
-    padding-top: 64px;
+    padding-top: 0px;
   } /* adjust if needed */
 }
 
