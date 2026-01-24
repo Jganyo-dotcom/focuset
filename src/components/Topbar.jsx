@@ -1,6 +1,6 @@
 // src/components/Topbar.jsx
 import { useState, useEffect } from "react";
-import "../styles/Topbar.css";
+import "../styles/topbar";
 
 export default function Topbar() {
   const [open, setOpen] = useState(false);
