@@ -1,172 +1,290 @@
+/* DashboardLayout.css
+   Clean, mobile-first layout for sidebar + topbar + content
+   - Sidebar off-canvas on small screens, fixed on desktop
+   - Topbar aligned with content and never hides page content
+   - Clear variables for easy tuning
+*/
+
+/* dashboard.css - tidy, responsive styles for Dashboard.jsx */
+
+/* Variables */
 :root {
-  --sidebar-width: 240px;
-  --sidebar-narrow: 80px;
-  --topbar-height: 72px;
-  --bg: #f5f7fb;
-  --shadow: rgba(2, 6, 23, 0.06);
+  --gap: 20px;
+  --card-radius: 12px;
+  --card-bg: #fff;
+  --muted: #6b7280;
+  --accent: #6366f1;
+  --success: #10b981;
+  --danger: #ef4444;
+  --page-padding: 20px;
+  --topbar-height: 72px; /* ensure matches layout topbar */
 }
 
-/* Layout root */
-.dashboard-layout {
-  display: flex;
-  background: var(--bg);
-  min-height: 100vh;
-  font-family: "Poppins", sans-serif;
-  position: relative;
-}
-
-/* SIDEBAR (desktop visible by default) */
-.sidebar {
-  width: var(--sidebar-width);
-  background: #eef1f8;
-  padding: 24px;
+/* Page container (use the layout's .dashboard or .main-wrapper) */
+.page-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--page-padding);
   box-sizing: border-box;
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 100vh;
-  transform: translateX(0);
-  transition:
-    transform 260ms cubic-bezier(0.2, 0.9, 0.2, 1),
-    box-shadow 260ms ease;
-  z-index: 1200;
-  box-shadow: 0 6px 24px var(--shadow);
 }
 
-/* collapsed desktop (optional) */
-.dashboard-layout.sidebar-collapsed .sidebar {
-  width: var(--sidebar-narrow);
+/* Reset first-child top margins inside content to avoid double spacing */
+.page-section > *:first-child {
+  margin-top: 0;
 }
 
-/* MAIN area (offset on desktop only) */
-.dashboard {
-  flex: 1;
- 
-   /* desktop offset */
-  transition:
-    margin-left 260ms ease,
-    padding 160ms ease;
-  min-width: 0;
+/* -------------------------
+   Top hero area
+   ------------------------- */
+.dashboard-top {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--gap);
+  align-items: start;
+  margin-bottom: 18px;
 }
 
-/* When collapsed on desktop, shift main */
-.dashboard-layout.sidebar-collapsed .dashboard {
-  margin-left: var(--sidebar-narrow);
+/* Hero card */
+.hero-card,
+.calendar-card,
+.chart-card,
+.donut-card,
+.card {
+  background: var(--card-bg);
+  border-radius: var(--card-radius);
+  padding: 18px;
+  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.04);
+  box-sizing: border-box;
 }
 
-/* TOPBAR */
-.topbar {
+/* Hero content */
+.hero-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.25rem;
+}
+.hero-card p {
+  margin: 0 0 12px 0;
+  color: var(--muted);
+}
+.hero-card button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+.hero-card button:focus {
+  outline: 3px solid rgba(99, 102, 241, 0.18);
+}
+
+/* Calendar card */
+.calendar-card h4 {
+  margin: 0 0 6px 0;
+}
+.calendar-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* -------------------------
+   Streak / Today goal
+   ------------------------- */
+.streak {
+  margin: 8px 0 18px 0;
+  padding: 12px 18px;
+  background: linear-gradient(90deg, #fff, #fbfbff);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.streak h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+.streak p {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* Today goal */
+.today-goal {
+  margin-bottom: 18px;
+}
+.today-goal > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--card-bg);
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.04);
+}
+.today-goal small {
+  color: var(--muted);
+}
+.today-goal h3 {
+  margin: 0;
+}
+.today-goal p {
+  margin: 0;
+  color: var(--muted);
+}
+.today-goal button {
+  align-self: flex-start;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+.completed {
+  color: var(--success);
+  font-weight: 600;
+}
+
+/* -------------------------
+   Stats area (chart + donut)
+   ------------------------- */
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--gap);
+  align-items: start;
+  margin-bottom: 18px;
+}
+.chart-card h4 {
+  margin: 0 0 6px 0;
+}
+.chart-card p {
+  margin: 0 0 12px 0;
+  color: var(--muted);
+}
+
+/* donut card center */
+.donut-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* -------------------------
+   Goals table
+   ------------------------- */
+.goals-table {
+  margin-bottom: 40px;
+}
+.table-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
-  height: var(--topbar-height);
+  margin-bottom: 12px;
+}
+.table-header h4 {
+  margin: 0;
+}
+.table-header .filter {
+  color: var(--muted);
+  font-size: 14px;
 }
 
-/* HAMBURGER: hidden on desktop, visible on small screens */
-.hamburger {
-  display: none;
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  margin-left: 12px;
+/* Table styles */
+.goals-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background: transparent;
+}
+.goals-table thead th {
+  text-align: left;
+  font-size: 13px;
+  color: var(--muted);
+  padding-bottom: 10px;
+}
+.goals-table tbody tr {
+  border-bottom: 1px solid #eef2f7;
+}
+.goals-table td {
+  padding: 12px 0;
+  vertical-align: middle;
 }
 
-/* HERO, CARDS, TABLE etc — keep your existing rules (unchanged) */
-/* ... keep the rest of your existing rules for hero-card, calendar-card, table, etc. ... */
+/* Status badges */
+.status {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  text-transform: capitalize;
+}
+.status.completed {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--success);
+}
+.status.in-progress {
+  background: rgba(99, 102, 241, 0.08);
+  color: var(--accent);
+}
+.status.pending {
+  background: rgba(107, 114, 128, 0.08);
+  color: var(--muted);
+}
 
-/* TABLET: stack layout and make sidebar full width at top */
-@media (max-width: 1023px) {
-  .dashboard-layout {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-    position: relative;
-    height: auto;
-    transform: translateX(0);
-    box-shadow: none;
-    padding: 16px;
-  }
-
-  .dashboard {
-    margin-left: 0;
-    padding: 16px;
-  }
-
+/* -------------------------
+   Responsive rules
+   ------------------------- */
+@media (max-width: 1024px) {
   .dashboard-top {
     grid-template-columns: 1fr;
   }
-
   .stats {
     grid-template-columns: 1fr;
   }
-
-  /* show hamburger on tablet */
-  .hamburger {
-    display: inline-block;
+  .donut-card {
+    order: 2;
   }
-}
-
-/* MOBILE: off-canvas sidebar controlled by .dashboard-layout.sidebar-open */
-@media (max-width: 767px) {
-  .sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100vh;
-    width: var(--sidebar-width);
-    transform: translateX(-100%); /* hidden by default on mobile */
-    box-shadow: none;
+  .chart-card {
+    order: 1;
   }
-
-  /* when the layout root has .sidebar-open, slide the sidebar in */
-  .dashboard-layout.sidebar-open .sidebar {
-    transform: translateX(0);
-    box-shadow: 0 12px 40px rgba(2, 6, 23, 0.12);
+  .hero-card button,
+  .today-goal button {
+    width: 100%;
   }
-
-  /* overlay (toggle via class on layout) */
-  .sidebar-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.35);
-    z-index: 1100;
-    opacity: 0;
-    transition: opacity 180ms ease;
-  }
-  .dashboard-layout.sidebar-open .sidebar-overlay {
-    display: block;
-    opacity: 1;
-  }
-
-  /* main content not offset on mobile */
-  .dashboard {
-    margin-left: 0;
+  .page-section {
     padding: 16px;
   }
-
-  /* show hamburger on mobile */
-  .hamburger {
-    display: inline-block;
-  }
 }
 
-/* ensure table responsive rules remain */
-@media (max-width: 767px) {
-  table thead {
+@media (max-width: 480px) {
+  .dashboard-top {
+    gap: 12px;
+  }
+  .stats {
+    gap: 12px;
+  }
+  .hero-card h3 {
+    font-size: 1.05rem;
+  }
+  .calendar-card {
     display: none;
-  }
-  table tr {
-    display: block;
-    margin-bottom: 16px;
-  }
-  table td {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-  }
+  } /* optional: hide calendar on very small screens */
+}
+
+/* -------------------------
+   Small utilities
+   ------------------------- */
+.center {
+  text-align: center;
+}
+.muted {
+  color: var(--muted);
+}
+
+/* Accessibility: focus outlines for keyboard users */
+button:focus,
+a:focus {
+  outline: 3px solid rgba(99, 102, 241, 0.18);
+  outline-offset: 2px;
 }

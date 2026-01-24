@@ -179,7 +179,7 @@
 
 // src/components/Sidebar.jsx
 import { NavLink, useNavigate } from "react-router-dom";
-import "../components/sidebar.css";
+import "./sidebar.css"; // make sure the path is correct
 import logo from "../assets/images/logo.png";
 
 export default function Sidebar({ isOpen, onClose }) {
@@ -225,7 +225,7 @@ export default function Sidebar({ isOpen, onClose }) {
         </nav>
       </aside>
 
-      {/* Overlay for mobile */}
+      {/* Overlay for mobile only */}
       {isOpen && <div className="sidebar-overlay" onClick={onClose} />}
     </>
   );
