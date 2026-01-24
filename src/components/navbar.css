@@ -1,157 +1,189 @@
-/* Layout */
+:root {
+  --navbar-height: 72px;
+  --page-max-width: 1200px;
+}
+
+/* Base navbar (keeps existing layout but no fixed background yet) */
 .navbar {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  height: var(--navbar-height);
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+/* New inner container that constrains content to page width */
+.navbar-inner {
+  width: 100%;
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding: 0 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 24px;
-  color: #ffffff;
-  top: 0;
+  box-sizing: border-box;
 }
 
-.navbar-left {
-  display: flex;
-  align-items: center;
-  margin: 0;
-  padding: 0;
-}
-
-.logo{
-  height: 60px;
-  width: auto;
-  object-fit: contain;
-}
-
-/* Right side */
-.navbar-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-/* Links */
-.nav-links {
-  display: flex;
-  align-items: center;
-  list-style: none;
-  gap: 1.5rem;
-  margin: 0;
-  padding: 0;
-}
-
-.nav-links a:not(.signup-btn) {
-  text-decoration: none;
-  color: #111827;
-  font-weight: 500;
-  font-size: 15px;
-}
-
-.signup-btn {
-  text-decoration: none;
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: 1px solid #dcdcdc;
-  color: #ffffff;
-  background-color: #4f46e5;
-  font-weight: 500;
-}
-
-/* Hamburger button (desktop hidden) */
-.navbar-hamburger {
-  display: none;
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-/* Mobile menu (hidden by default; shown when open state renders it) */
-/* MOBILE MENU */
-.navbar-mobile-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  left: 0;
-  background: #ffffff;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 16px 24px;
-
-  /* ANIMATION */
-  transform: translateY(-10px);
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-}
-
-/* WHEN OPEN */
-.navbar-mobile-menu.open {
-  transform: translateY(0);
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* LINKS */
-.navbar-mobile-menu a {
-  text-decoration: none;
-  color: #ffffff;
-  font-size: 16px;
-}
-
-.navbar-mobile-menu .signup-btn{
-  color: #ffffff;
-  background-color: #4f46e5;
-}
-
-
-/* Responsive: show hamburger and collapse links on small screens */
-@media (max-width: 768px) {
+/* Full-width background on large screens */
+@media (min-width: 1025px) {
   .navbar {
-    padding: 12px 16px;
-  }
-
-  /* show hamburger */
-  .navbar-hamburger {
-    display: inline-block;
-  }
-
-  /* hide inline nav links on small screens */
-  .nav-links {
-    display: none;
-  }
-
-  /* mobile menu styling when open (JS renders the element) */
-  .navbar-mobile-menu {
-    display: flex;
-    position: absolute;
-    top: 64px;
+    position: fixed;
     left: 0;
     right: 0;
-    background: #fff;
-    flex-direction: column;
-    padding: 12px 0;
-    border-top: 1px solid #eee;
-    z-index: 50;
+    width: 100%;
+    height: var(--navbar-height);
+    background: rgba(255, 255, 255, 0.98);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    z-index: 1400;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* centers .navbar-inner */
+    box-shadow: 0 6px 20px rgba(2, 6, 23, 0.04);
+    backdrop-filter: blur(4px);
   }
 
-  .navbar-mobile-menu a {
-    padding: 12px 16px;
-    border-bottom: 1px solid #f3f4f6;
-    text-decoration: none;
-    color: #111;
-    font-weight: 600;
+  /* ensure mobile menu still appears above the fixed bar */
+  .navbar-mobile-menu {
+    z-index: 1450;
   }
 }
 
+/* Prevent fixed navbar from covering page content:
+   apply padding-top to the page wrapper you use (landing, main-wrapper, etc.) */
+body,
+.landing,
+.main-wrapper,
+.page {
+  padding-top: var(--navbar-height);
+}
 
-.signup-btn{
-  background-color: #4f46e5;
-  color: #ffffff;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-weight: 600;
-  display: inline-flex;
+/* Adjust navbar for smaller screens (keep existing mobile behavior) */
+@media (max-width: 1024px) {
+  :root {
+    --navbar-height: 64px;
+  }
+  body,
+  .landing,
+  .main-wrapper,
+  .page {
+    padding-top: var(--navbar-height);
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    position: relative;
+    background: transparent;
+    box-shadow: none;
+  }
+  .navbar-inner {
+    padding: 0 16px;
+  }
+}
+
+/* make topbar span full viewport left → right on desktop */
+@media (min-width: 1025px) {
+  .topbar {
+    position: fixed;
+    left: 0; /* ← change this from var(--sidebar-width) */
+    right: 0;
+    top: 0;
+    width: auto;
+  }
+}
+
+:root {
+  --navbar-height: 72px;
+  --page-max-width: 1200px;
+}
+
+/* FULL-WIDTH NAVBAR (desktop) */
+.navbar {
+  position: fixed; /* fixed to viewport */
+  top: 0;
+  left: 0; /* ensure starts at viewport left */
+  right: 0; /* ensure ends at viewport right */
+  width: 100%; /* full viewport width */
+  height: var(--navbar-height);
+  background: rgba(255, 255, 255, 0.98);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  z-index: 1400;
+  display: flex;
   align-items: center;
+  justify-content: center; /* centers .navbar-inner */
+  box-shadow: 0 6px 20px rgba(2, 6, 23, 0.04);
+  box-sizing: border-box;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+/* Constrained inner content (logo + links) */
+.navbar-inner {
+  width: 100%;
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+/* Prevent navbar from covering content */
+body,
+.landing,
+.main-wrapper,
+.page {
+  padding-top: var(--navbar-height);
+}
+
+/* Mobile: revert to relative flow and keep existing mobile behavior */
+@media (max-width: 1024px) {
+  .navbar {
+    position: relative;
+    background: transparent;
+    box-shadow: none;
+  }
+  .navbar-inner {
+    padding: 0 16px;
+  }
+  body,
+  .landing,
+  .main-wrapper,
+  .page {
+    padding-top: 64px;
+  } /* adjust if needed */
+}
+
+:root {
+  --navbar-height: 72px;
+  --page-max-width: 1200px;
+}
+
+/* full-width background */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--navbar-height);
+  background: rgba(255, 255, 255, 0.98);
+  z-index: 1400;
+  display: flex;
   justify-content: center;
+  align-items: center;
+  box-shadow: 0 6px 20px rgba(2, 6, 23, 0.04);
+}
+
+/* inner constrained content */
+.navbar-inner {
+  width: 100%;
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
