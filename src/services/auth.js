@@ -48,5 +48,10 @@ export async function loginUser(main, password) {
     localStorage.setItem("authToken", data.token);
   }
 
-  return data; // { user, token }
+  if (data.safe_user) {
+    localStorage.setItem("safe_user", JSON.stringify(data.safe_user));
+  }
+  return data;
+
+   // { user, token }
 }
