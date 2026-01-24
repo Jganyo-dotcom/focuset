@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createGoal } from "../services/goal";
 import { generateSubscription } from "../utils/notification";
+import "./goalform.css";
 
 export default function GoalForm() {
   const [title, setTitle] = useState("");

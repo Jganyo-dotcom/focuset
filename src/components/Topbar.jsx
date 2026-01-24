@@ -72,7 +72,7 @@ export default function Topbar() {
           aria-expanded={open}
           onClick={() => setOpen((s) => !s)}
         >
-          <span className="hamburger-icon">☰</span>
+          <span className="hamburger-icon"></span>
         </button>
       </div>
     </header>
