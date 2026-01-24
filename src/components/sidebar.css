@@ -1,10 +1,10 @@
-/* src/styles/sidebar.css */
-.sidebar {
+src/styles/sidebar.css
+/* .sidebar {
   width: 260px;
   background: #ffffff;
   height: 100vh;
   position: fixed;
-  left: -260px; /* drawer start position */
+  left: -260px;  drawer start position 
   top: 0;
   transition:
     left 0.3s ease,
@@ -23,10 +23,10 @@
   z-index: 1000;
   box-sizing: border-box;
   overflow: auto;
-}
+} */
 
 /* COLLAPSED STATE */
-.sidebar.collapsed {
+/* .sidebar.collapsed {
   width: 80px;
   padding-left: 12px;
   padding-right: 12px;
@@ -67,10 +67,10 @@
   cursor: pointer;
   padding: 6px;
   line-height: 1;
-}
+} */
 
 /* NAVIGATION */
-.nav {
+/* .nav {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -110,51 +110,51 @@
   font-size: 16px;
   border-radius: 12px;
   cursor: pointer;
-}
+} */
 
 /* Ensure labels are hidden visually when collapsed but remain accessible if needed */
-.sidebar.collapsed .label {
+/* .sidebar.collapsed .label {
   display: none;
-}
+} */
 
 /* Desktop main content offset (if you use .dashboard-main) */
-.dashboard-main,
+/* .dashboard-main,
 .dashboard {
   margin-left: 260px;
   transition: margin-left 0.3s ease;
-}
+} */
 
-.sidebar.collapsed ~ .dashboard-main,
+/* .sidebar.collapsed ~ .dashboard-main,
 .sidebar.collapsed ~ .dashboard {
   margin-left: 80px;
-}
+} */
 
 /* Hide sidebar on small screens so topbar hamburger is visible */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .sidebar {
     display: none;
     width: 0;
     padding: 0;
     border-right: none;
-  }
+  } */
 
-  .dashboard-main,
+  /* .dashboard-main,
   .dashboard {
     margin-left: 0 !important;
     padding-left: 16px;
     padding-right: 16px;
   }
-}
+} */
 
 /* Small visual tweaks */
-@media (min-width: 769px) {
+/* @media (min-width: 769px) {
   .sidebar.collapsed .sidebar-logo .brand {
     display: none;
   }
-}
+} */
 
 /* parent-controlled layout offsets */
-.layout .dashboard-main,
+/* .layout .dashboard-main,
 .layout .dashboard {
   margin-left: 260px;
   transition: margin-left 0.3s ease;
@@ -163,10 +163,10 @@
 .layout.sidebar-collapsed .dashboard-main,
 .layout.sidebar-collapsed .dashboard {
   margin-left: 80px;
-}
+} */
 
 /* mobile: hide sidebar and reset margins */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .layout .sidebar {
     display: none;
   }
@@ -180,11 +180,11 @@
 /* default: hide menu button on desktop */
 .topbar .menu-btn {
   display: none;
-}
+} 
 
 /* show on mobile/tablet */
-@media (max-width: 1024px) {
+/* @media (max-width: 1024px) {
   .topbar .menu-btn {
     display: inline-flex;
   }
-}
+} */

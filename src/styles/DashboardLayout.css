@@ -1,61 +1,61 @@
-:root {
+/* :root {
   --sidebar-width: 260px;
   --sidebar-narrow: 80px;
   --bg: #f9fafb;
   --topbar-height: 72px;
   --shadow: rgba(2, 6, 23, 0.08);
-}
+} */
 
 /* Page shell (matches your markup .dashboard-layout) */
-.dashboard-layout {
+/* .dashboard-layout {
   display: flex;
   min-height: 100vh;
   background: var(--bg);
   overflow-x: hidden;
   position: relative;
-}
+} */
 
 /* Sidebar (off-canvas by default on small screens) */
-.sidebar {
+/* .sidebar {
   width: var(--sidebar-width);
   flex-shrink: 0;
   position: fixed;
   left: 0;
   top: 0;
   height: 100vh;
-  transform: translateX(0); /* visible on desktop */
+  transform: translateX(0); visible on desktop
   transition:
     transform 260ms cubic-bezier(0.2, 0.9, 0.2, 1),
     box-shadow 260ms ease;
   z-index: 1200;
   background: #fff;
   box-shadow: 0 6px 24px var(--shadow);
-}
+} */
 
 /* Collapsed desktop state (optional) */
-.dashboard-layout.sidebar-collapsed .sidebar {
+/* .dashboard-layout.sidebar-collapsed .sidebar {
   width: var(--sidebar-narrow);
-}
+} */
 
 /* Main content area — offset to make room for sidebar on desktop */
-.dashboard-main {
+/* .dashboard-main {
   margin-left: var(--sidebar-width);
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-width: 0; /* prevents overflow */
+  min-width: 0; prevents overflow 
   transition:
     margin-left 260ms ease,
     padding 160ms ease;
-}
+} */
 
 /* When layout uses collapsed sidebar class, shift main content */
-.dashboard-layout.sidebar-collapsed .dashboard-main {
+/* .dashboard-layout.sidebar-collapsed .dashboard-main {
   margin-left: var(--sidebar-narrow);
 }
 
 /* Topbar */
-.topbar {
+/* .topbar {
   height: var(--topbar-height);
   padding: 0 32px;
   display: flex;
@@ -64,16 +64,16 @@
   background: #ffffff;
   border-bottom: 1px solid #e5e7eb;
   z-index: 1000;
-}
+}  */
 
 /* Content area */
-.dashboard-content {
+/* .dashboard-content {
   padding: 24px;
   flex: 1;
-}
+} */
 
 /* Overlay (used on mobile when sidebar is open) */
-.sidebar-overlay {
+/* .sidebar-overlay {
   display: none;
   position: fixed;
   inset: 0;
@@ -81,27 +81,27 @@
   z-index: 1100;
   opacity: 0;
   transition: opacity 180ms ease;
-}
-.dashboard-layout.sidebar-open .sidebar-overlay {
+} */
+/* .dashboard-layout.sidebar-open .sidebar-overlay {
   display: block;
   opacity: 1;
-}
+} */
 
 /* MOBILE / TABLET: make sidebar off-canvas and toggle with .sidebar-open on .dashboard-layout */
-@media (max-width: 1024px) {
+/* @media (max-width: 1024px) {
   .sidebar {
-    transform: translateX(-100%); /* hidden by default on smaller screens */
+    transform: translateX(-100%); hidden by default on smaller screens 
     box-shadow: none;
-  }
+  } */
 
   /* when the layout root has .sidebar-open, show the sidebar */
-  .dashboard-layout.sidebar-open .sidebar {
+  /* .dashboard-layout.sidebar-open .sidebar {
     transform: translateX(0);
     box-shadow: 0 12px 40px rgba(2, 6, 23, 0.12);
-  }
+  } */
 
   /* do not offset main content on small screens */
-  .dashboard-main {
+  /* .dashboard-main {
     margin-left: 0;
     padding: 16px;
   }
@@ -109,30 +109,30 @@
   .dashboard-content {
     padding: 20px;
   }
-}
+} */
 
 /* SMALLER PHONES */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   :root {
     --sidebar-width: 220px;
-  } /* optional smaller sidebar width on phones */
+  }  optional smaller sidebar width on phones 
   .topbar {
     padding: 0 20px;
   }
   .dashboard-content {
     padding: 16px;
   }
-}
+} */
 
 /* Utility: keep overlay hidden on large screens */
-@media (min-width: 1025px) {
+/* @media (min-width: 1025px) {
   .sidebar-overlay {
     display: none !important;
   }
-}
+} */
 
 /* Hamburger visibility: hidden on desktop, visible on tablet/mobile */
-.hamburger {
+/* .hamburger {
   display: none;
   background: none;
   border: none;
@@ -143,5 +143,78 @@
 @media (max-width: 1024px) {
   .hamburger {
     display: inline-block;
+  }
+} */
+
+
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f9fafb;
+  position: relative;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+}
+
+/* MAIN CONTENT */
+.dashboard-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Topbar */
+.topbar {
+  height: 72px;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+/* Dashboard content */
+.dashboard-content {
+  padding: 24px;
+  flex: 1;
+}
+
+/* Mobile overlay */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 10;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 220px;
+  }
+
+  .dashboard-content {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+    transform: translateX(-100%);
+  }
+
+  .dashboard-layout.sidebar-open .sidebar {
+    transform: translateX(0);
+    z-index: 1000;
   }
 }
