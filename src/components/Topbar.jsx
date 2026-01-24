@@ -1,9 +1,16 @@
 // src/components/Topbar.jsx
 import { useState, useEffect } from "react";
-import "../styles/topbar.css";
+import "../styles/Topbar.css";
 
 export default function Topbar() {
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
+  // Load user from localStorage
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("safe_user"));
+    if (storedUser) setUser(storedUser);
+  }, []);
 
   // Close mobile menu when viewport becomes wide or on Escape
   useEffect(() => {
@@ -34,7 +41,9 @@ export default function Topbar() {
 
       <div className="topbar-right">
         <div className="user-info" aria-hidden={open ? "true" : "false"}>
-          <span className="welcome">Welcome back, Timi</span>
+          <span className="welcome">
+            {user ? `Welcome back, ${user.username}` : "Welcome"}
+          </span>
           <span className="avatar" aria-hidden="true">
             👤
           </span>
