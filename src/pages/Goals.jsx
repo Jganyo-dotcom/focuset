@@ -1,5 +1,6 @@
 // src/pages/Goals.jsx
 import { useEffect, useState } from "react";
+// wrap the page
 import GoalForm from "../components/GoalForm";
 import GoalMiniModal from "../components/GoalMiniModal";
 import StreakModal from "../components/StreakModal";
@@ -61,12 +62,12 @@ export default function Goals() {
   const apiBase = ""; // e.g., "http://localhost:5000"
 
   return (
-    <div className="app-layout">
-      <div className="main-content">
-        <div className="goals-grid">
-          {/* LEFT COLUMN */}
-          <div className="left-column">
-            <GoalForm />
+    <>
+      {/* PAGE CONTENT */}
+      <div className="goals-grid">
+        {/* LEFT COLUMN */}
+        <div className="left-column">
+          <GoalForm />
 
             {/* ACTIVE GOALS */}
             <section className="card">
@@ -206,32 +207,31 @@ export default function Goals() {
             </section>
           </div>
 
-          {/* RIGHT COLUMN */}
-          <div className="right-column">
-            <section className="card summary-card">
-              <h3>Goal Summary</h3>
-              <div className="summary-item">
-                <span className="dot blue" /> Active Goals{" "}
-                <b>{activeGoals.length}</b>
-              </div>
-              <div className="summary-item">
-                <span className="dot green" /> Completed Goals{" "}
-                <b>{archivedGoals.length}</b>
-              </div>
-              <div className="summary-item">
-                <span className="dot red" /> Overdue Goals{" "}
-                <b>
-                  {
-                    activeGoals.filter(
-                      (g) =>
-                        new Date(g.endDate) < new Date() &&
-                        g.status !== "completed",
-                    ).length
-                  }
-                </b>
-              </div>
-            </section>
-          </div>
+        {/* RIGHT COLUMN */}
+        <div className="right-column">
+          <section className="card summary-card">
+            <h3>Goal Summary</h3>
+            <div className="summary-item">
+              <span className="dot blue" /> Active Goals{" "}
+              <b>{activeGoals.length}</b>
+            </div>
+            <div className="summary-item">
+              <span className="dot green" /> Completed Goals{" "}
+              <b>{archivedGoals.length}</b>
+            </div>
+            <div className="summary-item">
+              <span className="dot red" /> Overdue Goals{" "}
+              <b>
+                {
+                  activeGoals.filter(
+                    (g) =>
+                      new Date(g.endDate) < new Date() &&
+                      g.status !== "completed",
+                  ).length
+                }
+              </b>
+            </div>
+          </section>
         </div>
       </div>
 
@@ -255,6 +255,6 @@ export default function Goals() {
       )}
 
       {error && <div className="error">{error}</div>}
-    </div>
+    </>
   );
 }

@@ -1,29 +1,33 @@
-// src/pages/Dashboard.jsx
 import { useState } from "react";
+import StudyBarChart from "../components/StudyBarChart";
+import ProgressDonut from "../components/ProgressDonut";
 import {
   studyGoals,
   weeklyStudyData,
   progressData,
   todayGoal as goalData,
 } from "../data/dashboardData";
-
-import StudyBarChart from "../components/StudyBarChart";
-import ProgressDonut from "../components/ProgressDonut";
 import "../styles/dashboard.css";
 
 export default function Dashboard() {
   const [goal, setGoal] = useState(goalData);
+  const markAsDone = () => {
+    setGoal((prev) => ({
+      ...prev,
+      completed: true,
+    }));
+  };
 
   return (
-    <div className="dashboard">
+    <>
       {/* HERO */}
       <section className="dashboard-top">
         <div className="hero-card">
           <h3>You are building a consistent learning habit.</h3>
           <p>Small steps everyday.</p>
+          <img src="./assets/images/hero-card.png" alt="study image" height={140} />
           <button>Check in for today</button>
         </div>
-
         <div className="calendar-card">
           <h4>Mon, Nov 5</h4>
           <p>November 2025</p>
@@ -38,17 +42,18 @@ export default function Dashboard() {
 
       {/* TODAY GOAL */}
       <section className="today-goal">
-        <small>Today's Goal</small>
-        <h3>{goal.title}</h3>
-        <p>{goal.time}</p>
+        <div>
+          <small>Today's Goal</small>
+          <h3>{goal.title}</h3>
+          <p>{goal.time}</p>
+          {!goal.completed ? (
+            <button onClick={markAsDone}>Mark as done</button>
+          ) : (
+            <span className="completed">Completed ✔</span>
+          )}
+        </div>
 
-        {!goal.completed ? (
-          <button onClick={() => setGoal({ ...goal, completed: true })}>
-            Mark as done
-          </button>
-        ) : (
-          <span className="completed">Completed ✔</span>
-        )}
+        <img src="./assets/images/study-illustration.png" alt="study image" height={140} />
       </section>
 
       {/* STATS */}
@@ -57,7 +62,6 @@ export default function Dashboard() {
           <h4>My statistics</h4>
           <StudyBarChart data={weeklyStudyData} />
         </div>
-
         <div className="donut-card">
           <ProgressDonut data={progressData} />
         </div>
@@ -65,7 +69,10 @@ export default function Dashboard() {
 
       {/* GOALS TABLE */}
       <section className="goals-table">
-        <h4>Study Goals</h4>
+        <div className="table-header">
+          <h4>Study Goals</h4>
+          <span className="filter">Last week ⌄</span>
+        </div>
         <table>
           <thead>
             <tr>
@@ -87,6 +94,6 @@ export default function Dashboard() {
           </tbody>
         </table>
       </section>
-    </div>
+    </>
   );
 }

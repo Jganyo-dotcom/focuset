@@ -31,76 +31,78 @@ export default function Progress() {
   };
 
   return (
-    <div className="progress-page">
-      <h2>Progress</h2>
-      <p className="subtitle">
-        Track your consistency and growth over time
-      </p>
+    <>
+      <div className="progress-page">
+        <h2>Progress</h2>
+        <p className="subtitle">
+          Track your consistency and growth over time
+        </p>
 
-      {/* STUDY STREAK */}
-      <div className="card streak-card">
-        <div className="streak-header">
-          <h3>Study Streak</h3>
-          <div className="tabs">
-            {["Weekly", "Monthly", "All Time"].map(tab => (
-              <button
-                key={tab}
-                className={view === tab ? "active" : ""}
-                onClick={() => setView(tab)}
-              >
-                {tab}
-              </button>
+        {/* STUDY STREAK */}
+        <div className="card streak-card">
+          <div className="streak-header">
+            <h3>Study Streak</h3>
+            <div className="tabs">
+              {["Weekly", "Monthly", "All Time"].map(tab => (
+                <button
+                  key={tab}
+                  className={view === tab ? "active" : ""}
+                  onClick={() => setView(tab)}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="streak-grid">
+            {streakData.map((minutes, index) => (
+              <div
+                key={index}
+                className={`streak-box ${getColor(minutes)}`}
+              />
             ))}
           </div>
+
+          <p className="streak-summary">
+            You studied for <strong>{daysStudied} days</strong> this month.
+          </p>
         </div>
 
-        <div className="streak-grid">
-          {streakData.map((minutes, index) => (
-            <div
-              key={index}
-              className={`streak-box ${getColor(minutes)}`}
-            />
-          ))}
-        </div>
-
-        <p className="streak-summary">
-          You studied for <strong>{daysStudied} days</strong> this month.
-        </p>
-      </div>
-
-      {/* STUDY HISTORY */}
-      <div className="card">
-        <h3>Study History</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Goal</th>
-              <th>Progress</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {goals.map(goal => (
-              <tr key={goal.id}>
-                <td>{goal.title}</td>
-                <td>{goal.progress}%</td>
-                <td>{goal.status}</td>
+        {/* STUDY HISTORY */}
+        <div className="card">
+          <h3>Study History</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Goal</th>
+                <th>Progress</th>
+                <th>Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {goals.map(goal => (
+                <tr key={goal.id}>
+                  <td>{goal.title}</td>
+                  <td>{goal.progress}%</td>
+                  <td>{goal.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-      {/* BADGES */}
-      <div className="card badges">
-        <h3>Badges</h3>
-        <div className="badge-grid">
-          {daysStudied >= 5 && <Badge icon="🔥" label="5 Days Streak" />}
-          {completedGoals.length >= 5 && <Badge icon="🏆" label="5 Goals Completed" />}
-          {completedGoals.length >= 10 && <Badge icon="🎯" label="10 Goals Completed" />}
+        {/* BADGES */}
+        <div className="card badges">
+          <h3>Badges</h3>
+          <div className="badge-grid">
+            {daysStudied >= 5 && <Badge icon="🔥" label="5 Days Streak" />}
+            {completedGoals.length >= 5 && <Badge icon="🏆" label="5 Goals Completed" />}
+            {completedGoals.length >= 10 && <Badge icon="🎯" label="10 Goals Completed" />}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

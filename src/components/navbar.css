@@ -1,4 +1,3 @@
-/* Layout */
 .navbar {
   display: flex;
   align-items: center;
@@ -16,7 +15,7 @@
 }
 
 .logo{
-  height: 60px;
+  height: 20px;
   width: auto;
   object-fit: contain;
 }
