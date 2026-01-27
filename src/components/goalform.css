@@ -122,3 +122,32 @@
 .goal-form button[type="button"]:hover:not(:disabled) {
   background: #e0e0e0;
 }
+
+/* Default (desktop/tablet): row layout */
+.date-row {
+  display: flex;
+  gap: 16px;
+}
+
+/* Phone view: stack vertically */
+@media (max-width: 600px) {
+  .date-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .goal-form input,
+  .goal-form select {
+    width: 100%; /* full width on small screens */
+  }
+
+  .step-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .step-row input {
+    width: 100%;
+    margin-bottom: 6px;
+  }
+}

@@ -523,3 +523,21 @@ button {
    ========================= */
 /* .sidebar { outline: 1px solid rgba(0,0,0,0.06); } */
 /* .nav-link { outline: none; } */
+
+@media (min-width: 1025px) {
+  /* Default: navbar spans full width */
+  .navbar {
+    left: 0;
+    width: 100%;
+  }
+
+  /* Only when sidebar is active */
+  body.has-sidebar .main-content {
+    margin-left: var(--sidebar-width);
+  }
+
+  body.has-sidebar .navbar {
+    left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+  }
+}

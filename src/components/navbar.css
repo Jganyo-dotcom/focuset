@@ -20,11 +20,17 @@
   object-fit: contain;
 }
 
-/* Right side */
-.navbar-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+/* Adjust navbar for smaller screens (keep existing mobile behavior) */
+@media (max-width: 1024px) {
+  :root {
+    --navbar-height: 20px;
+  }
+  body,
+  .landing,
+  .main-wrapper,
+  .page {
+    padding-top: var(--navbar-height);
+  }
 }
 
 /* Links */
@@ -152,5 +158,65 @@
   font-weight: 600;
   display: inline-flex;
   align-items: center;
+  justify-content: center; /* centers .navbar-inner */
+  box-shadow: 0 6px 20px rgba(2, 6, 23, 0.04);
+  box-sizing: border-box;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+/* Constrained inner content (logo + links) */
+.navbar-inner {
+  width: 100%;
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+/* Prevent navbar from covering content */
+body,
+.landing,
+.main-wrapper,
+.page {
+  padding-top: var(--navbar-height);
+}
+
+/* Mobile: revert to relative flow and keep existing mobile behavior */
+@media (max-width: 1024px) {
+  .navbar {
+    position: relative;
+    background: transparent;
+    box-shadow: none;
+  }
+  .navbar-inner {
+    padding: 0 16px;
+  }
+  body,
+  .landing,
+  .main-wrapper,
+  .page {
+    padding-top: 0px;
+  } /* adjust if needed */
+}
+
+:root {
+  --navbar-height: 72px;
+  --page-max-width: 1200px;
+}
+
+/* full-width background */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--navbar-height);
+  background: rgba(255, 255, 255, 0.98);
+  z-index: 1400;
+  display: flex;
   justify-content: center;
 }
