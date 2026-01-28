@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
 const COLORS = ["#22c55e", "#facc15", "#9ca3af", "#ef4444"];
@@ -22,4 +23,4 @@ const ProgressDonut = ({ data }) => {
   );
 };
 
-export default ProgressDonut;
+export default memo(ProgressDonut);

@@ -1,12 +1,15 @@
 import { useState } from "react";
-import StudyBarChart from "../components/StudyBarChart";
-import ProgressDonut from "../components/ProgressDonut";
+import { lazy, Suspense } from "react";
+
+const StudyBarChart = lazy(() => import("../components/StudyBarChart"));
+const ProgressDonut = lazy(() => import("../components/ProgressDonut"));
 import {
   studyGoals,
   weeklyStudyData,
   progressData,
   todayGoal as goalData,
 } from "../data/dashboardData";
+import { getToday } from "../utils/date";
 import "../styles/dashboard.css";
 import heroImg from "../assets/images/hero-card.png";
 import studyImg from "../assets/images/study-illustration.png";
@@ -19,6 +22,7 @@ export default function Dashboard() {
       completed: true,
     }));
   };
+  const today = getToday();
 
   return (
     <>
@@ -34,8 +38,8 @@ export default function Dashboard() {
           <p>Checking in helps keep your streak alive.</p>
         </div>
         <div className="calendar-card">
-          <h4>Mon, Nov 5</h4>
-          <p>November 2025</p>
+          <h4>{today.date},{today.date}</h4>
+          <p>{today.month} {today.year}</p>
         </div>
       </section>
 
@@ -65,12 +69,18 @@ export default function Dashboard() {
       <section className="stats">
         <div className="chart-card">
           <h4>My statistics</h4>
-          <StudyBarChart data={weeklyStudyData} />
+
+          <Suspense fallback={<p>Loading chart...</p>}>
+            <StudyBarChart data={weeklyStudyData} />
+          </Suspense>
         </div>
+
         <div className="donut-card">
-          <ProgressDonut data={progressData} />
+          <Suspense fallback={<p>Loading progress...</p>}>
+            <ProgressDonut data={progressData} />
+          </Suspense>
         </div>
-      </section>
+</section>
 
       {/* GOALS TABLE */}
       <section className="goals-table">

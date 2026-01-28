@@ -1,3 +1,4 @@
+import { memo } from "react";
 import {
   BarChart,
   Bar,
@@ -20,4 +21,4 @@ const StudyBarChart = ({ data }) => {
   );
 };
 
-export default StudyBarChart;
+export default memo(StudyBarChart);
