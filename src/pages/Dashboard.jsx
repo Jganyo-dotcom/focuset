@@ -27,9 +27,10 @@ export default function Dashboard() {
         <div className="hero-card">
           <h3>You are building a consistent learning habit.</h3>
           <p>Small steps everyday.</p>
-          <img src={heroImg} alt="hero image" height={140} />
-
-          <button>Check in for today</button>
+          <div hero-action>
+            <img src={heroImg} alt="hero image" height={140} />
+            <button>Check in for today</button>
+          </div>
           <p>Checking in helps keep your streak alive.</p>
         </div>
         <div className="calendar-card">
