@@ -8,6 +8,8 @@ import {
   todayGoal as goalData,
 } from "../data/dashboardData";
 import "../styles/dashboard.css";
+import heroImg from "../assets/images/hero-card.png";
+import studyImg from "../assets/images/study-illustration.png";
 
 export default function Dashboard() {
   const [goal, setGoal] = useState(goalData);
@@ -25,8 +27,10 @@ export default function Dashboard() {
         <div className="hero-card">
           <h3>You are building a consistent learning habit.</h3>
           <p>Small steps everyday.</p>
-          <img src="./assets/images/hero-card.png" alt="study image" height={140} />
+          <img src={heroImg} alt="hero image" height={140} />
+
           <button>Check in for today</button>
+          <p>Checking in helps keep your streak alive.</p>
         </div>
         <div className="calendar-card">
           <h4>Mon, Nov 5</h4>
@@ -53,7 +57,7 @@ export default function Dashboard() {
           )}
         </div>
 
-        <img src="./assets/images/study-illustration.png" alt="study image" height={140} />
+        <img src={studyImg} alt="study image" height={140} />
       </section>
 
       {/* STATS */}

@@ -51,6 +51,16 @@
   }
 }
 
+@media (max-width: 768px) {
+  .search-input {
+    display: none;
+  }
+
+  .topbar {
+    padding: 0 16px;
+  }
+}
+
 @media (max-width: 767px) {
   .topbar-left {
     gap: 8px;
