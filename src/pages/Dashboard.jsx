@@ -27,7 +27,7 @@ export default function Dashboard() {
         <div className="hero-card">
           <h3>You are building a consistent learning habit.</h3>
           <p>Small steps everyday.</p>
-          <div hero-action>
+          <div className="hero-action">
             <img src={heroImg} alt="hero image" height={140} />
             <button>Check in for today</button>
           </div>
