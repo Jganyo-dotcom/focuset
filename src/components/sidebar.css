@@ -68,10 +68,9 @@ button {
   height: 36px;
   object-fit: contain;
 }
-h4 {
-  text-align: end;
+.sidebar-header h4{
+  text-align: center;
 }
-
 /* nav inside sidebar */
 .nav {
   display: flex;

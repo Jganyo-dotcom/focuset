@@ -12,9 +12,9 @@
   color: #fff;
   padding: 24px;
   border-radius: 20px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12ps;
   justify-content: space-between;
   align-items: center;
 }
@@ -22,20 +22,18 @@
 .hero-card h3 {
   font-size: 20px;
   font-weight: 600;
-  grid-column: 1;
 }
 
 .hero-card p {
   margin: 8px 0 16px;
   opacity: 0.9;
-  grid-column: 1;
 }
 
 .hero-card button {
   background: #fff;
   color: #111827;
   border: none;
-  padding: 10px 16px;
+  padding: 10px;
   border-radius: 999px;
   font-weight: 500;
   cursor: pointer;
