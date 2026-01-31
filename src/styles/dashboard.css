@@ -172,7 +172,7 @@ button:active {
 }
 
 .table-card {
-  background: #ffffff;
+  background: transparent;
   border-radius: 16px;
   padding: 12px 20px 20px;
 }
