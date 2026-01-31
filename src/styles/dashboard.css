@@ -143,11 +143,37 @@ button:active {
   background: #dbe7f9;
   border-radius: 18px;
   padding: 16px;
+  margin-top: 24px;
+  font-family: "Inter", sans-serif
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px 14px;
+}
+
+.table-header h4 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filter {
+  font-size: 14px;
+  color: #6b7280;
+  background: #ffffff;
+  padding: 6px 12px;
+  border-radius: 999px;
 }
 
 .table-card {
   background: #ffffff;
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 12px 20px 20px;
 }
 
