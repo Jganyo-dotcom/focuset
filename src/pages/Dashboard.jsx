@@ -38,7 +38,7 @@ export default function Dashboard() {
           <p>Checking in helps keep your streak alive.</p>
         </div>
         <div className="calendar-card">
-          <h4>{today.date},{today.date}</h4>
+          <h4>{today.date}</h4>
           <p>{today.month} {today.year}</p>
         </div>
       </section>
