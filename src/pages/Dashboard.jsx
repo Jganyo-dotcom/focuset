@@ -9,7 +9,6 @@ import {
   progressData,
   todayGoal as goalData,
 } from "../data/dashboardData";
-import { getToday } from "../utils/date";
 import "../styles/dashboard.css";
 import heroImg from "../assets/images/hero-card.png";
 import studyImg from "../assets/images/study-illustration.png";
@@ -22,7 +21,19 @@ export default function Dashboard() {
       completed: true,
     }));
   };
-  const today = getToday();
+
+  const today = new Date();
+
+  const dayLabel = today.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+
+  const monthYear = today.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
 
   return (
     <>
@@ -40,8 +51,8 @@ export default function Dashboard() {
           <p>Checking in helps keep your streak alive.</p>
         </div>
         <div className="calendar-card">
-          <h4>{today.date}</h4>
-          <p>{today.month} {today.year}</p>
+          <h4>{dayLabel}</h4>
+          <p>{monthYear} {today.year}</p>
         </div>
       </section>
 
