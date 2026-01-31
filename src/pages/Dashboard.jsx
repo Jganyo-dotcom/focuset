@@ -112,17 +112,29 @@ export default function Dashboard() {
               <th>Status</th>
             </tr>
           </thead>
-          <tbody>
-            {studyGoals.map((item) => (
-              <tr key={item.id}>
-                <td>{item.goal}</td>
-                <td>{item.time}</td>
-                <td className={`status ${item.status}`}>
+          
+          {/* Mobile stacked cards */}
+        <div className="mobile-goals-cards">
+          {studyGoals.map((item) => (
+            <div key={item.id} className="goal-card">
+              <div className="goal-row">
+                <span className="goal-label">Goal</span>
+                <span className="goal-value">{item.goal}</span>
+              </div>
+              <div className="goal-row">
+                <span className="goal-label">Time</span>
+                <span className="goal-value">{item.time}</span>
+              </div>
+              <div className="goal-row">
+                <span className="goal-label">Status</span>
+                <span className={`goal-value status ${item.status}`}>
                   {item.status.replace("-", " ")}
-                </td>
-              </tr>
-            ))}
-          </tbody>
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+
         </table>
         </div>
       </section>
