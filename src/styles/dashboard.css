@@ -18,6 +18,10 @@
   align-items: flex-start;
 }
 
+.herleft{
+  max-width: 60%;
+}
+
 .hero-action{
   display: flex;
   align-items: center;
@@ -52,16 +56,6 @@
   margin: 0;
   opacity: 0.9;
 }
-
-/* .hero-card button {
-  background: #fff;
-  color: #111827;
-  border: none;
-  padding: 10px;
-  border-radius: 999px;
-  font-weight: 500;
-  cursor: pointer;
-} */
 
 /* CALENDAR CARD */
 .calendar-card {
