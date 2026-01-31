@@ -32,8 +32,8 @@ export default function Dashboard() {
           <h3>You are building a consistent learning habit.</h3>
           <p>Small steps everyday.</p>
           <div className="hero-action">
-            <img src={heroImg} alt="hero image" height={140} />
             <button>Check in for today</button>
+            <img src={heroImg} alt="hero image" height={140} />
           </div>
           <p>Checking in helps keep your streak alive.</p>
         </div>
