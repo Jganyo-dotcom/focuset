@@ -44,6 +44,7 @@ export default function Dashboard() {
             <h3>You are building a consistent learning habit.</h3>
             <p>Small steps everyday.</p>
           </div>
+
           <div className="hero-action">
             <button>Check in for today</button>
             <img src={heroImg} alt="hero image" height={140} />
@@ -99,9 +100,11 @@ export default function Dashboard() {
       <section className="goals-table">
         <div className="table-header">
           <h4>Study Goals</h4>
-          <span className="filter">Last week ⌄</span>
+          <span className="filter">Last week</span>
         </div>
-        <table>
+
+        <div className="table-card">
+          <table>
           <thead>
             <tr>
               <th>Goal</th>
@@ -121,6 +124,7 @@ export default function Dashboard() {
             ))}
           </tbody>
         </table>
+        </div>
       </section>
     </>
   );

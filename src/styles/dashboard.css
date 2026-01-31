@@ -140,9 +140,15 @@ button:active {
 
 /* GOALS TABLE */
 .goals-table {
-  background: #fff;
-  border-radius: 20px;
-  padding: 20px;
+  background: #dbe7f9;
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.table-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 12px 20px 20px;
 }
 
 .goals-table table {
@@ -150,13 +156,27 @@ button:active {
   border-collapse: collapse;
 }
 
-.goals-table th,
-.goals-table td {
-  padding: 12px 0;
-  text-align: left;
-  border-bottom: 1px solid #e5e7eb;
+.goals-table thead {
+  background: #dbe7f9;
 }
 
+.goals-table thead th {
+  padding: 14px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  text-align: left;
+}
+
+.goals-table tbody td {
+  padding: 14px 0;
+  font-size: 16px;
+  color: #111827;
+}
+
+.status {
+  font-weight: 500;
+}
 .status.completed {
   color: #16a34a;
 }
@@ -167,6 +187,10 @@ button:active {
 
 .status.not-started {
   color: #ef4444;
+}
+
+.status.not-completed{
+  color: #5b7cfa;
 }
 
 /* =========================
@@ -238,6 +262,9 @@ button:active {
     -webkit-overflow-scrolling: touch;
   }
 
+  .table-card{
+    overflow-x: auto;
+  }
   .goals-table table {
     min-width: 500px;
   }
