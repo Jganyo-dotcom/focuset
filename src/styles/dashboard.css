@@ -320,53 +320,6 @@ button:active {
     margin: 0 auto;
   }
 
-  /* Hide desktop table on mobile */
-  .goals-table table {
-    display: none;
-  }
-
-  .mobile-goals-cards {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .goal-card {
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  }
-
-  .goal-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-  }
-
-  .goal-row:last-child {
-    margin-bottom: 0;
-  }
-
-  .goal-label {
-    font-weight: 600;
-    color: #6b7280;
-    font-family: "Inter", sans-serif; /* Figma font */
-  }
-
-  .goal-value {
-    font-weight: 500;
-    color: #111827;
-    font-family: "Inter", sans-serif; /* Figma font */
-  }
-
-  /* Status colors remain the same */
-  .status.completed { color: #6fcf97; }
-  .status.not-started { color: #eb5757; }
-  .status.in-progress { color: #f2c94c; }
-  .status.not-completed { color: #5b7cfa; }
-  
-
 /* Small phones */
 @media (max-width: 375px) {
   .hero-card h3 {
