@@ -9,24 +9,28 @@
 .hero-card {
   background: linear-gradient(135deg, #8b5cf6, #ec4899);
   color: #fff;
-  padding: 24px;
-  border-radius: 20px;
+  padding: 28px;
+  border-radius: 24px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  position: relative;
+  overflow: hidden;
 }
 
 .hero-text{
-  max-width: 60%;
+  max-width: 65%;
 }
 
 .hero-text h3 {
   font-size: 20px;
   font-weight: 600;
-  margin-bottom: 4px;
+  line-height: 1.35;
+  margin: 0 0 4px;
 }
 
 .hero-text p {
+  font-size: 14px;
   margin: 0;
   opacity: 0.9;
 }
@@ -35,38 +39,41 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
 .hero-action button {
   background: #ffffff;
   color: #111827;
   border: none;
-  padding: 10px 16px;
+  padding: 12px 20px;
   border-radius: 999px;
   font-weight: 500;
   font-size: 14px;
   cursor: pointer;
   white-space: nowrap;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
-}
-
-button {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-button:hover {
+.hero-action button:hover {
   transform: translateY(-1px);
 }
 
-button:active {
+.hero-action button:active {
   transform: scale(0.97);
 }
 
 .hero-action img{
-  height: 160px;
+  height: 170px;
   object-fit: contain;
-  margin-left: 16px;
+  margin-left: auto;
+}
+
+.hero-subtext {
+  font-size: 13px;
+  opacity: 0.8;
+  margin-top: 4px;
 }
 
 /* CALENDAR CARD */
@@ -278,6 +285,10 @@ button:active {
     height: 140px;
   }
 
+  .hero-text {
+    max-width: 100%;
+  }
+
   .streak {
     flex-direction: column;
     align-items: flex-start;
@@ -307,7 +318,7 @@ button:active {
   .hero-action img {
     align-self: center;
     margin-left: 0;
-    height: 120px;
+    height: 150px;
   }
 
   .today-goal{

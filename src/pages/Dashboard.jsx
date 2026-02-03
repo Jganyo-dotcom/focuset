@@ -47,10 +47,12 @@ export default function Dashboard() {
 
           <div className="hero-action">
             <button>Check in for today</button>
-            <img src={heroImg} alt="hero image" height={140} />
+            <img src={heroImg} alt="hero image"/>
           </div>
-          <p>Checking in helps keep your streak alive.</p>
+          <p className="hero-subtext">
+            Checking in helps keep your streak alive.</p>
         </div>
+
         <div className="calendar-card">
           <h4>{dayLabel}</h4>
           <p>{monthYear} {today.year}</p>
