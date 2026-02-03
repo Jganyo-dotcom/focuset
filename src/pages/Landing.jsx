@@ -38,7 +38,7 @@ const Landing = () => {
 
       {/* PAIN POINTS & SOLUTIONS */}
       <section className="problem-solution">
-        <div className="card">
+        <div className="card-pain">
           <h2 className="danger">Learners Pain Points ❌</h2>
           <div className="card-content">
             <ul>
