@@ -70,35 +70,29 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 40px;
+  gap: 24px;
 }
 
 .card-content ul {
-  /* max-width: 60%;
-  list-style-position: inside;
-  padding-left: 0;
-  margin: 0; */
-  flex: 1;
   padding: 0;
   margin: 0;
   list-style-position: inside;
 }
 
 .card-content li {
-  /* margin-bottom: 10px;
-  line-height: 1.4; */
-  font-size: 15px;
   line-height: 1.6;
   margin-bottom: 12px;
 }
 
 .card-pain .card-content {
   flex-direction: row;
+  margin-left: -8px;
 }
 
 
 .card-solution .card-content {
   flex-direction: row-reverse;
+  margin-right: -8px;
 }
 
 .card-content img {
@@ -293,6 +287,25 @@ h2.danger {
 
   .feature-grid {
     grid-template-columns: 1fr;
+  }
+
+  .streak {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    margin: 0 auto 24px;
+  }
+
+  .streak h2 {
+    font-size: 32px;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .streak p {
+    text-align: center;
   }
 
   .cta {
