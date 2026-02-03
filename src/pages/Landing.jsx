@@ -50,7 +50,7 @@ const Landing = () => {
           </div>
         </div>
 
-        <div className="card">
+        <div className="card-solution">
           <h2 className="success">Solutions ✅</h2>
           <div className="card-content">
             <ul>
