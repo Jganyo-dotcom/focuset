@@ -70,7 +70,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
+  gap: 20px;
 }
 
 .card-content ul {
@@ -84,19 +84,29 @@
   margin-bottom: 12px;
 }
 
-.card.in .card-content {
+.card.pain .card-content {
   flex-direction: row;
   margin-left: -8px;
+  justify-content: flex-start;
 }
-
+.card.pain ul{
+text-align: left;
+margin-right: auto;
+}
 
 .card.solution .card-content {
   flex-direction: row-reverse;
   margin-right: -8px;
+  justify-content: flex-end;
+}
+
+.card.solution ul{
+  text-align: left;
+  margin-left: auto;
 }
 
 .card-content img {
-  width: 140px;
+  width: 120px;
   max-width: 140px;
   height: auto;
   object-fit: contain;
@@ -272,7 +282,14 @@ h2.danger {
 
   .card-content {
     flex-direction: column;
+    align-items: center;
+    text-align: center;
     gap: 24px;
+    text-align: left;
+  }
+
+  .card.pain ul, .card.solution ul {
+    margin: 0;
     text-align: left;
   }
 
