@@ -4,6 +4,7 @@ import "../styles/SignIn.css";
 import { loginUser } from "../services/auth";
 
 import illustration from "../assets/images/signin-illustration.png";
+import googleIcon from "../assets/icons/google.svg";
 
 export default function SignIn() {
   const [loading, setLoading] = useState(false);
@@ -128,7 +129,6 @@ export default function SignIn() {
           <p className="forgot-password">Forgot password?</p>
 
           {error && <p className="error-text">{error}</p>}
-
           <button className="signin-btn" type="submit" disabled={loading}>
             {loading ? "Signing in..." : "Sign in"}
           </button>
@@ -136,6 +136,7 @@ export default function SignIn() {
           <div className="divider">or</div>
 
           <button className="google-btn" type="button">
+            <img src={googleIcon} alt="Google icon" />
             <span>Google</span> SOCIAL
           </button>
 

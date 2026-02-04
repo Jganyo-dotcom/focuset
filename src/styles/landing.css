@@ -70,7 +70,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
 }
 
 .card-content ul {
@@ -325,10 +325,11 @@ h2.danger {
     margin: 0 auto 24px;
   }
 
-  .streak h2 {
+  .streak h3 {
     font-size: 32px;
     margin-bottom: 8px;
     text-align: center;
+    width: 100%;
   }
 
   .streak p {
