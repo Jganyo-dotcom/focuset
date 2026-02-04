@@ -70,18 +70,20 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 12px;
 }
 
 .card-content ul {
   padding: 0;
-  margin: 0;
+  margin: 0 auto;
   list-style-position: inside;
+  text-align: center;
 }
 
 .card-content li {
   line-height: 1.6;
   margin-bottom: 12px;
+  text-align: center;
 }
 
 .card.pain .card-content {
@@ -111,6 +113,14 @@ margin-right: auto;
   height: auto;
   object-fit: contain;
   flex-shrink: 0;
+}
+
+.card.pain img {
+  margin-left: 8px;
+}
+
+.card.solution img{
+  margin-right: 8px;
 }
 
 h2.danger {
