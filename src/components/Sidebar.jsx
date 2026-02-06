@@ -43,7 +43,7 @@ export default function Sidebar({ isOpen, onClose }) {
             Settings
           </NavLink>
 
-          <button className="signout-link" onClick={handleLogout}>
+          <button type="button" className="signout-link" onClick={handleLogout}>
             Sign-out
           </button>
         </nav>

@@ -124,3 +124,12 @@
     display: none;
   }
 }
+
+/* 🚨 FORCE OVERRIDE — REMOVE RED LOGOUT */
+.logout-btn,
+.signout-link {
+  background: transparent !important;
+  color: #111827 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
