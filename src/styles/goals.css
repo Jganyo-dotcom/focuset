@@ -213,6 +213,11 @@
   font-size: 14px;
 }
 
+.progress-ring {
+  display: block;
+  margin: auto;
+}
+
 /* =========================
    Responsive
 ========================= */
