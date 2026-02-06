@@ -1,24 +1,33 @@
 import { Routes, Route } from "react-router-dom";
+
 import Landing from "./pages/Landing";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import ResetPassword from "./pages/ResetPassword";
+
 import Dashboard from "./pages/Dashboard";
 import Goals from "./pages/Goals";
 import Progress from "./pages/Progress";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+
 import ProtectedRoute from "./routes/ProtectedRoute";
 import DashboardLayout from "./layouts/DashboardLayout";
 
 function App() {
   return (
     <Routes>
-      {/* Public routes */}
+      {/* =====================
+          PUBLIC ROUTES
+      ====================== */}
       <Route path="/" element={<Landing />} />
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
-      {/* Protected routes wrapped in DashboardLayout */}
+      {/* =====================
+          PROTECTED ROUTES
+      ====================== */}
       <Route
         path="/dashboard"
         element={
@@ -53,7 +62,7 @@ function App() {
       />
 
       <Route
-        path="/progress"
+        path="/profile"
         element={
           <ProtectedRoute>
             <DashboardLayout>
