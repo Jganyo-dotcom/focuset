@@ -90,12 +90,20 @@
    Sign-out
 ========================= */
 .signout-link {
+  background: none;
   margin-top: 8px;
   background: none;
   border: none;
+  padding: 12px 0;
   font-size: 16px;
+  font-weight: 500;
   color: var(--text-dark);
   cursor: pointer;
+  text-align: center;
+}
+
+.signout-link:hover {
+  background: #ef4444;
 }
 
 /* =========================
