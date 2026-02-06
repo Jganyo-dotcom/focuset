@@ -1,15 +1,16 @@
+/* === Modal Backdrop & Container === */
 .modal-backdrop {
   position: fixed;
   inset: 0;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
-  background: rgba(15, 23, 42, 0.55);
+  background: rgba(15, 23, 42, 0.55); /* deep slate overlay */
   z-index: 9999;
-  padding: 10px;
+  padding: 20px;
 }
 
-.modal.sheet {
+.modal {
   width: 100%;
   max-width: 860px;
   background: #ffffff;
@@ -21,15 +22,9 @@
   color: #0f172a;
 }
 
-.drag-handle {
-  width: 40px;
-  height: 4px;
-  background: #d1d5db;
-  border-radius: 999px;
-  margin: 8px auto;
-}
-
-.modal-header, .modal-footer {
+/* === Header & Footer === */
+.modal-header,
+.modal-footer {
   padding: 16px 20px;
   background: #f9fafb;
   display: flex;
@@ -38,8 +33,35 @@
   border-bottom: 1px solid #e5e7eb;
 }
 
-.modal-footer { border-top: 1px solid #e5e7eb; }
+.modal-footer {
+  border-top: 1px solid #e5e7eb;
+}
 
+.modal-header h4 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: #374151;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+.close-btn:hover {
+  background: #f3f4f6;
+}
+.close-btn:focus {
+  outline: 2px solid #93c5fd;
+}
+
+/* === Body === */
 .modal-body {
   padding: 16px 20px;
   max-height: 65vh;
@@ -47,6 +69,7 @@
   background: #fff;
 }
 
+/* === Table === */
 .mini-table {
   width: 100%;
   border-collapse: collapse;
@@ -65,14 +88,49 @@
   border-bottom: 1px solid #e5e7eb;
 }
 
-.mini-table tbody tr:nth-child(odd) { background: #fff; }
-.mini-table tbody tr:nth-child(even) { background: #f9fafb; }
-.mini-table tbody tr:hover { background: #f3f4f6; }
+.mini-table tbody tr {
+  transition: background 0.15s ease;
+}
+.mini-table tbody tr:nth-child(odd) {
+  background: #ffffff;
+}
+.mini-table tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+.mini-table tbody tr:hover {
+  background: #f3f4f6;
+}
 
-.mini-table td { padding: 12px 14px; vertical-align: middle; }
+.mini-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: middle;
+}
 
-.done { text-decoration: line-through; color: #6b7280; }
+/* === Status Pills === */
+.status-pill {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.done-pill {
+  background: #dcfce7;
+  color: #166534;
+}
+.pending-pill {
+  background: #fef9c3;
+  color: #92400e;
+}
 
+/* === Done State === */
+.done {
+  text-decoration: line-through;
+  color: #6b7280;
+}
+
+/* === Buttons === */
 .mini-table button {
   margin-left: 6px;
   padding: 6px 12px;
@@ -84,26 +142,41 @@
   font-size: 0.85rem;
   transition: all 0.2s ease;
 }
-
-.mini-table button:hover { background: #e5e7eb; transform: translateY(-1px); }
-.mini-table button:active { transform: translateY(0); }
-
-.error { color: #b91c1c; margin-top: 8px; font-weight: 600; }
-
-.progress-ring-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 16px;
+.mini-table button:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+.mini-table button:active {
+  transform: translateY(0);
+}
+.mini-table .primary {
+  background: #0ea5a4;
+  color: #fff;
+}
+.mini-table .danger {
+  background: #fee2e2;
+  color: #b91c1c;
 }
 
+/* === Error === */
+.error {
+  color: #b91c1c;
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+/* === Responsive: Mobile Cards === */
 @media (max-width: 720px) {
-  .modal.sheet {
+  .modal {
     max-width: 96%;
-    border-radius: 24px 24px 0 0;
   }
-  .mini-table thead { display: none; }
-  .mini-table, .mini-table tbody, .mini-table tr, .mini-table td {
+  .mini-table thead {
+    display: none;
+  }
+  .mini-table,
+  .mini-table tbody,
+  .mini-table tr,
+  .mini-table td {
     display: block;
     width: 100%;
   }
@@ -112,7 +185,7 @@
     border-radius: 10px;
     padding: 12px;
     background: #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
   .mini-table td {
     display: flex;
@@ -126,5 +199,11 @@
     color: #374151;
     margin-right: 8px;
     flex: 0 0 45%;
+  }
+  .mini-table td > .actions {
+    flex: 0 0 55%;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
   }
 }

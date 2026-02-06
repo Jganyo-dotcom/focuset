@@ -1,440 +1,29 @@
-// // services/goalsService.js
-// // const BASE_URL = "https://capstone-project-9o17.onrender.com/api/goals";
-// const BASE_URL = "https://capstone-project-9o17.onrender.com/student";
-// const token = localStorage.getItem("authToken");
-
-// // src/components/GoalMiniModal.jsx
-// import { useEffect, useState } from "react";
-// import "./GoalMiniModal.css";
-// import { getGoals } from "../services/goal";
-
-// export default function GoalMiniModal({
-//   apiBase = "http://127.0.0.1:45555/student/",
-//   goal,
-//   onClose,
-//   onGoalUpdated,
-// }) {
-//   // initialize from goal.steps (fallback to miniGoals)
-//   const [miniGoals, setMiniGoals] = useState(
-//     goal?.steps ?? goal?.miniGoals ?? [],
-//   );
-//   const [editingIndex, setEditingIndex] = useState(null);
-//   const [editText, setEditText] = useState("");
-//   const [loadingIndex, setLoadingIndex] = useState(null);
-//   const [error, setError] = useState(null);
-
-//   // reset local state when the selected goal changes
-//   useEffect(() => {
-//     setMiniGoals(goal?.steps ?? goal?.miniGoals ?? []);
-//     setEditingIndex(null);
-//     setEditText("");
-//     setError(null);
-//   }, [goal]);
-
-//   // helper: PATCH step at index with partial body
-//   async function patchMiniGoal(index, body) {
-//     setLoadingIndex(index);
-//     setError(null);
-//     try {
-//       // Adjust "steps" vs "minigoals" to match your backend route
-//       const res = await fetch(`${BASE_URL}/create/goals/${goal._id}/${index}`, {
-//         method: "PATCH",
-//         headers: {
-//           "Content-Type": "application/json",
-//           ...(token && { Authorization: `Bearer ${token}` }),
-//         },
-//         body: JSON.stringify(body),
-//       });
-//       getGoals();
-//       // Redirect to the goals page
-//       alert("updated");
-
-//       if (!res.ok) {
-//         const text = await res.json();
-//         alert(text.message);
-//         throw new Error(text.message || "Failed to update step");
-//       }
-//       const updatedGoal = await res.json(); // expect updated goal or updated steps
-//       const updatedSteps = updatedGoal?.steps ?? updatedGoal?.miniGoals ?? null;
-//       if (updatedSteps) {
-//         setMiniGoals(updatedSteps);
-//         onGoalUpdated && onGoalUpdated(updatedGoal);
-//       } else {
-//         // fallback: merge partial change locally
-//         setMiniGoals((prev) =>
-//           prev.map((m, i) => (i === index ? { ...m, ...body } : m)),
-//         );
-//       }
-//     } catch (err) {
-//       console.error("patchMiniGoal error:", err);
-//       setError(err.message || "Network error");
-//     } finally {
-//       setLoadingIndex(null);
-//     }
-//   }
-
-//   // helper: call a specific backend route for a mini-goal action
-//   async function markMiniGoalDone(index) {
-//     setLoadingIndex(index);
-//     setError(null);
-
-//     try {
-//       const res = await fetch(
-//         `${BASE_URL}/goal/${goal._id}/step/${index}/done`,
-//         {
-//           method: "GET",
-//           headers: {
-//             "Content-Type": "application/json",
-//             ...(token && { Authorization: `Bearer ${token}` }),
-//           },
-//         },
-//       );
-
-//       const data = await res.json();
-//       // Redirect to the goals page
-//       alert(data.message || "ticked");
-//       if (!res.ok) {
-//         throw new Error(data.message || "Failed to update mini-goal");
-//       }
-
-//       // update local state immediately
-//       if (data?.steps) {
-//         alert("there");
-//         setMiniGoals(data.steps);
-//         onGoalUpdated?.(data);
-//       }
-
-//       // optionally refresh all goals if you want global consistency
-//       await getGoals();
-
-//       alert(data.message);
-
-//       return { ok: true, updatedGoal: data };
-//     } catch (err) {
-//       console.error("markMiniGoalDone error:", err);
-//       setError(err.message || "Network error");
-//       return { ok: false, error: err };
-//     } finally {
-//       setLoadingIndex(null);
-//     }
-//   }
-
-//   // mark done
-//   const handleMarkDone = async (index) => {
-//     setMiniGoals((prev) =>
-//       prev.map((m, i) =>
-//         i === index ? { ...m, completed: true, done: true } : m,
-//       ),
-//     );
-//     await markMiniGoalDone(index, { completed: true, done: true });
-//   };
-
-//   // undo done
-//   const handleUndo = async (index) => {
-//     setMiniGoals((prev) =>
-//       prev.map((m, i) =>
-//         i === index ? { ...m, completed: false, done: false } : m,
-//       ),
-//     );
-//     await patchMiniGoal(index, { completed: false, done: false });
-//   };
-
-//   // start editing
-//   const startEdit = (index) => {
-//     setEditingIndex(index);
-//     setEditText(miniGoals[index]?.name ?? miniGoals[index]?.title ?? "");
-//   };
-
-//   // save edit
-//   const saveEdit = async (index) => {
-//     if (!editText.trim()) {
-//       setError("Mini-goal text cannot be empty");
-//       return;
-//     }
-//     setMiniGoals((prev) =>
-//       prev.map((m, i) =>
-//         i === index ? { ...m, name: editText, title: editText } : m,
-//       ),
-//     );
-//     setEditingIndex(null);
-//     await patchMiniGoal(index, { name: editText, title: editText });
-//   };
-
-//   return (
-//     <div
-//       className="modal-backdrop"
-//       role="dialog"
-//       aria-modal="true"
-//       aria-label={`Mini goals for ${goal.title}`}
-//     >
-//       <div className="modal">
-//         <header className="modal-header">
-//           <h4>{goal.title} — Mini Goals</h4>
-//           <button className="close-btn" onClick={onClose} aria-label="Close">
-//             ✕
-//           </button>
-//         </header>
-
-//         <div className="modal-body">
-//           {miniGoals.length === 0 ? (
-//             <p className="muted">No mini-goals for this goal.</p>
-//           ) : (
-//             <table className="mini-table">
-//               <thead>
-//                 <tr>
-//                   <th>#</th>
-//                   <th>Mini Goal</th>
-//                   <th>Status</th>
-//                   <th>Actions</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {miniGoals.map((m, i) => {
-//                   const done = m.completed === true || m.done === true;
-//                   return (
-//                     <tr key={i}>
-//                       <td>{i + 1}</td>
-//                       <td>
-//                         {editingIndex === i ? (
-//                           <input
-//                             value={editText}
-//                             onChange={(e) => setEditText(e.target.value)}
-//                             onKeyDown={(e) => {
-//                               if (e.key === "Enter") saveEdit(i);
-//                             }}
-//                           />
-//                         ) : (
-//                           <span className={done ? "done" : ""}>
-//                             {m.name ?? m.title}
-//                           </span>
-//                         )}
-//                       </td>
-//                       <td>{done ? "Done" : "Pending"}</td>
-//                       <td>
-//                         {editingIndex === i ? (
-//                           <>
-//                             <button
-//                               onClick={() => saveEdit(i)}
-//                               disabled={loadingIndex === i}
-//                             >
-//                               Save
-//                             </button>
-//                             <button onClick={() => setEditingIndex(null)}>
-//                               Cancel
-//                             </button>
-//                           </>
-//                         ) : (
-//                           <>
-//                             {!done ? (
-//                               <button
-//                                 onClick={() => handleMarkDone(i)}
-//                                 disabled={loadingIndex === i}
-//                               >
-//                                 Mark as done
-//                               </button>
-//                             ) : (
-//                               <button
-//                                 onClick={() => handleUndo(i)}
-//                                 disabled={loadingIndex === i}
-//                               >
-//                                 Undo
-//                               </button>
-//                             )}
-//                             <button
-//                               onClick={() => startEdit(i)}
-//                               disabled={loadingIndex === i}
-//                             >
-//                               Edit
-//                             </button>
-//                           </>
-//                         )}
-//                       </td>
-//                     </tr>
-//                   );
-//                 })}
-//               </tbody>
-//             </table>
-//           )}
-//           {error && <div className="error">{error}</div>}
-//         </div>
-
-//         <footer className="modal-footer">
-//           <button onClick={onClose}>Close</button>
-//         </footer>
-//       </div>
-//     </div>
-//   );
-// }
-
+// services/goalsService.js
+// const BASE_URL = "https://capstone-project-9o17.onrender.com/api/goals";
+const BASE_URL = "https://capstone-project-9o17.onrender.com/student";
+const token = localStorage.getItem("authToken");
 
 // src/components/GoalMiniModal.jsx
-// import { useEffect, useState } from "react";
-// import "./GoalMiniModal.css";
-
-// const BASE_URL = "https://capstone-project-9o17.onrender.com/student";
-
-// export default function GoalMiniModal({ goal, onClose, onGoalUpdated }) {
-//   const token = localStorage.getItem("authToken");
-
-//   const [miniGoals, setMiniGoals] = useState([]);
-//   const [editingIndex, setEditingIndex] = useState(null);
-//   const [editText, setEditText] = useState("");
-//   const [loadingIndex, setLoadingIndex] = useState(null);
-//   const [error, setError] = useState("");
-
-//   useEffect(() => {
-//     setMiniGoals(goal?.steps ?? goal?.miniGoals ?? []);
-//   }, [goal]);
-
-//   // Close on ESC
-//   useEffect(() => {
-//     const onEsc = (e) => e.key === "Escape" && onClose();
-//     window.addEventListener("keydown", onEsc);
-//     return () => window.removeEventListener("keydown", onEsc);
-//   }, [onClose]);
-
-//   async function updateStep(index, body) {
-//     try {
-//       setLoadingIndex(index);
-
-//       const res = await fetch(
-//         `${BASE_URL}/create/goals/${goal._id}/${index}`,
-//         {
-//           method: "PATCH",
-//           headers: {
-//             "Content-Type": "application/json",
-//             Authorization: `Bearer ${token}`,
-//           },
-//           body: JSON.stringify(body),
-//         },
-//       );
-
-//       const data = await res.json();
-//       if (!res.ok) throw new Error(data.message);
-
-//       setMiniGoals(data.steps);
-//       onGoalUpdated?.(data);
-//     } catch (err) {
-//       setError(err.message);
-//     } finally {
-//       setLoadingIndex(null);
-//     }
-//   }
-
-//   async function markDone(index) {
-//     setMiniGoals((prev) =>
-//       prev.map((m, i) =>
-//         i === index ? { ...m, completed: true } : m,
-//       ),
-//     );
-//     await updateStep(index, { completed: true });
-//   }
-
-//   async function undo(index) {
-//     setMiniGoals((prev) =>
-//       prev.map((m, i) =>
-//         i === index ? { ...m, completed: false } : m,
-//       ),
-//     );
-//     await updateStep(index, { completed: false });
-//   }
-
-//   function saveEdit(index) {
-//     if (!editText.trim()) return;
-//     setEditingIndex(null);
-//     updateStep(index, { name: editText });
-//   }
-
-//   return (
-//     <div className="modal-backdrop" onClick={onClose}>
-//       <div
-//         className="modal sheet"
-//         onClick={(e) => e.stopPropagation()}
-//       >
-//         <header className="modal-header">
-//           <h4>{goal.title}</h4>
-//           <button onClick={onClose}>✕</button>
-//         </header>
-
-//         <div className="modal-body">
-//           {miniGoals.map((m, i) => {
-//             const done = m.completed;
-//             return (
-//               <div className="mini-card" key={i}>
-//                 <div className="mini-main">
-//                   {editingIndex === i ? (
-//                     <input
-//                       value={editText}
-//                       onChange={(e) => setEditText(e.target.value)}
-//                       onKeyDown={(e) =>
-//                         e.key === "Enter" && saveEdit(i)
-//                       }
-//                       autoFocus
-//                     />
-//                   ) : (
-//                     <span className={done ? "done" : ""}>
-//                       {m.name}
-//                     </span>
-//                   )}
-//                   <small>{done ? "Done" : "Pending"}</small>
-//                 </div>
-
-//                 <div className="mini-actions">
-//                   {editingIndex === i ? (
-//                     <>
-//                       <button onClick={() => saveEdit(i)}>Save</button>
-//                       <button onClick={() => setEditingIndex(null)}>
-//                         Cancel
-//                       </button>
-//                     </>
-//                   ) : (
-//                     <>
-//                       {!done ? (
-//                         <button onClick={() => markDone(i)}>
-//                           Done
-//                         </button>
-//                       ) : (
-//                         <button onClick={() => undo(i)}>Undo</button>
-//                       )}
-//                       <button
-//                         onClick={() => {
-//                           setEditingIndex(i);
-//                           setEditText(m.name);
-//                         }}
-//                       >
-//                         Edit
-//                       </button>
-//                     </>
-//                   )}
-//                 </div>
-//               </div>
-//             );
-//           })}
-
-//           {error && <p className="error">{error}</p>}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import "./GoalMiniModal.css";
-import confetti from "canvas-confetti";
 import { getGoals } from "../services/goal";
 
-export default function GoalMiniModal({ apiBase, goal, onClose, onGoalUpdated }) {
-  const [miniGoals, setMiniGoals] = useState(goal?.steps ?? goal?.miniGoals ?? []);
+export default function GoalMiniModal({
+  apiBase = "http://127.0.0.1:45555/student/",
+  goal,
+  onClose,
+  onGoalUpdated,
+}) {
+  // initialize from goal.steps (fallback to miniGoals)
+  const [miniGoals, setMiniGoals] = useState(
+    goal?.steps ?? goal?.miniGoals ?? [],
+  );
   const [editingIndex, setEditingIndex] = useState(null);
   const [editText, setEditText] = useState("");
   const [loadingIndex, setLoadingIndex] = useState(null);
   const [error, setError] = useState(null);
-  const token = localStorage.getItem("authToken");
 
-  const modalRef = useRef(null);
-  let startY = 0;
-
+  // reset local state when the selected goal changes
   useEffect(() => {
     setMiniGoals(goal?.steps ?? goal?.miniGoals ?? []);
     setEditingIndex(null);
@@ -442,32 +31,13 @@ export default function GoalMiniModal({ apiBase, goal, onClose, onGoalUpdated })
     setError(null);
   }, [goal]);
 
-  const completedCount = miniGoals.filter(m => m.completed || m.done).length;
-  const totalCount = miniGoals.length || 1;
-  const progressPercent = Math.round((completedCount / totalCount) * 100);
-
-  // Confetti on 100%
-  useEffect(() => {
-    if (progressPercent === 100 && miniGoals.length > 0) {
-      confetti({ particleCount: 120, spread: 80, origin: { y: 0.7 } });
-    }
-  }, [progressPercent, miniGoals.length]);
-
-  // Swipe down to close (mobile)
-  const onTouchStart = (e) => {
-    startY = e.touches[0].clientY;
-  };
-  const onTouchMove = (e) => {
-    const delta = e.touches[0].clientY - startY;
-    if (delta > 120) onClose();
-  };
-
-  // PATCH mini-goal
-  const patchMiniGoal = async (index, body) => {
+  // helper: PATCH step at index with partial body
+  async function patchMiniGoal(index, body) {
     setLoadingIndex(index);
     setError(null);
     try {
-      const res = await fetch(`${apiBase}/create/goals/${goal._id}/${index}`, {
+      // Adjust "steps" vs "minigoals" to match your backend route
+      const res = await fetch(`${BASE_URL}/create/goals/${goal._id}/${index}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -475,43 +45,116 @@ export default function GoalMiniModal({ apiBase, goal, onClose, onGoalUpdated })
         },
         body: JSON.stringify(body),
       });
-      const updatedGoal = await res.json();
+      getGoals();
+      // Redirect to the goals page
+      alert("updated");
+
+      if (!res.ok) {
+        const text = await res.json();
+        alert(text.message);
+        throw new Error(text.message || "Failed to update step");
+      }
+      const updatedGoal = await res.json(); // expect updated goal or updated steps
       const updatedSteps = updatedGoal?.steps ?? updatedGoal?.miniGoals ?? null;
       if (updatedSteps) {
         setMiniGoals(updatedSteps);
-        onGoalUpdated?.(updatedGoal);
+        onGoalUpdated && onGoalUpdated(updatedGoal);
+      } else {
+        // fallback: merge partial change locally
+        setMiniGoals((prev) =>
+          prev.map((m, i) => (i === index ? { ...m, ...body } : m)),
+        );
       }
     } catch (err) {
+      console.error("patchMiniGoal error:", err);
       setError(err.message || "Network error");
     } finally {
       setLoadingIndex(null);
     }
-  };
+  }
 
-  const markMiniGoalDone = async (index) => {
-    setMiniGoals(prev =>
-      prev.map((m, i) => (i === index ? { ...m, completed: true, done: true } : m))
+  // helper: call a specific backend route for a mini-goal action
+  async function markMiniGoalDone(index) {
+    setLoadingIndex(index);
+    setError(null);
+
+    try {
+      const res = await fetch(
+        `${BASE_URL}/goal/${goal._id}/step/${index}/done`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token && { Authorization: `Bearer ${token}` }),
+          },
+        },
+      );
+
+      const data = await res.json();
+      // Redirect to the goals page
+      alert(data.message || "ticked");
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to update mini-goal");
+      }
+
+      // update local state immediately
+      if (data?.steps) {
+        alert("there");
+        setMiniGoals(data.steps);
+        onGoalUpdated?.(data);
+      }
+
+      // optionally refresh all goals if you want global consistency
+      await getGoals();
+
+      alert(data.message);
+
+      return { ok: true, updatedGoal: data };
+    } catch (err) {
+      console.error("markMiniGoalDone error:", err);
+      setError(err.message || "Network error");
+      return { ok: false, error: err };
+    } finally {
+      setLoadingIndex(null);
+    }
+  }
+
+  // mark done
+  const handleMarkDone = async (index) => {
+    setMiniGoals((prev) =>
+      prev.map((m, i) =>
+        i === index ? { ...m, completed: true, done: true } : m,
+      ),
     );
-    await patchMiniGoal(index, { completed: true, done: true });
-    await getGoals(); // refresh parent
+    await markMiniGoalDone(index, { completed: true, done: true });
   };
 
+  // undo done
   const handleUndo = async (index) => {
-    setMiniGoals(prev =>
-      prev.map((m, i) => (i === index ? { ...m, completed: false, done: false } : m))
+    setMiniGoals((prev) =>
+      prev.map((m, i) =>
+        i === index ? { ...m, completed: false, done: false } : m,
+      ),
     );
     await patchMiniGoal(index, { completed: false, done: false });
   };
 
+  // start editing
   const startEdit = (index) => {
     setEditingIndex(index);
     setEditText(miniGoals[index]?.name ?? miniGoals[index]?.title ?? "");
   };
 
+  // save edit
   const saveEdit = async (index) => {
-    if (!editText.trim()) return setError("Mini-goal cannot be empty");
-    setMiniGoals(prev =>
-      prev.map((m, i) => (i === index ? { ...m, name: editText, title: editText } : m))
+    if (!editText.trim()) {
+      setError("Mini-goal text cannot be empty");
+      return;
+    }
+    setMiniGoals((prev) =>
+      prev.map((m, i) =>
+        i === index ? { ...m, name: editText, title: editText } : m,
+      ),
     );
     setEditingIndex(null);
     await patchMiniGoal(index, { name: editText, title: editText });
@@ -524,25 +167,15 @@ export default function GoalMiniModal({ apiBase, goal, onClose, onGoalUpdated })
       aria-modal="true"
       aria-label={`Mini goals for ${goal.title}`}
     >
-      <div
-        className="modal sheet"
-        ref={modalRef}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-      >
-        <div className="drag-handle" />
-
+      <div className="modal">
         <header className="modal-header">
           <h4>{goal.title} — Mini Goals</h4>
-          <button className="close-btn" onClick={onClose} aria-label="Close">✕</button>
+          <button className="close-btn" onClick={onClose} aria-label="Close">
+            ✕
+          </button>
         </header>
 
         <div className="modal-body">
-          <div className="progress-ring-wrapper">
-            <ProgressRing percent={progressPercent} />
-            <p className="muted">Mini-goal progress</p>
-          </div>
-
           {miniGoals.length === 0 ? (
             <p className="muted">No mini-goals for this goal.</p>
           ) : (
@@ -557,7 +190,7 @@ export default function GoalMiniModal({ apiBase, goal, onClose, onGoalUpdated })
               </thead>
               <tbody>
                 {miniGoals.map((m, i) => {
-                  const done = m.completed || m.done;
+                  const done = m.completed === true || m.done === true;
                   return (
                     <tr key={i}>
                       <td>{i + 1}</td>
@@ -566,27 +199,53 @@ export default function GoalMiniModal({ apiBase, goal, onClose, onGoalUpdated })
                           <input
                             value={editText}
                             onChange={(e) => setEditText(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && saveEdit(i)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") saveEdit(i);
+                            }}
                           />
                         ) : (
-                          <span className={done ? "done" : ""}>{m.name ?? m.title}</span>
+                          <span className={done ? "done" : ""}>
+                            {m.name ?? m.title}
+                          </span>
                         )}
                       </td>
                       <td>{done ? "Done" : "Pending"}</td>
                       <td>
                         {editingIndex === i ? (
                           <>
-                            <button onClick={() => saveEdit(i)} disabled={loadingIndex === i}>Save</button>
-                            <button onClick={() => setEditingIndex(null)}>Cancel</button>
+                            <button
+                              onClick={() => saveEdit(i)}
+                              disabled={loadingIndex === i}
+                            >
+                              Save
+                            </button>
+                            <button onClick={() => setEditingIndex(null)}>
+                              Cancel
+                            </button>
                           </>
                         ) : (
                           <>
                             {!done ? (
-                              <button onClick={() => markMiniGoalDone(i)} disabled={loadingIndex === i}>Mark as done</button>
+                              <button
+                                onClick={() => handleMarkDone(i)}
+                                disabled={loadingIndex === i}
+                              >
+                                Mark as done
+                              </button>
                             ) : (
-                              <button onClick={() => handleUndo(i)} disabled={loadingIndex === i}>Undo</button>
+                              <button
+                                onClick={() => handleUndo(i)}
+                                disabled={loadingIndex === i}
+                              >
+                                Undo
+                              </button>
                             )}
-                            <button onClick={() => startEdit(i)} disabled={loadingIndex === i}>Edit</button>
+                            <button
+                              onClick={() => startEdit(i)}
+                              disabled={loadingIndex === i}
+                            >
+                              Edit
+                            </button>
                           </>
                         )}
                       </td>
@@ -604,50 +263,5 @@ export default function GoalMiniModal({ apiBase, goal, onClose, onGoalUpdated })
         </footer>
       </div>
     </div>
-  );
-}
-
-// Circular progress ring
-function ProgressRing({ percent }) {
-  const radius = 36;
-  const stroke = 6;
-  const normalizedRadius = radius - stroke * 2;
-  const circumference = normalizedRadius * 2 * Math.PI;
-  const strokeDashoffset = circumference - (percent / 100) * circumference;
-
-  return (
-    <svg height={radius * 2} width={radius * 2}>
-      <circle
-        stroke="#E5E7EB"
-        fill="transparent"
-        strokeWidth={stroke}
-        r={normalizedRadius}
-        cx={radius}
-        cy={radius}
-      />
-      <circle
-        stroke="#8B5CF6"
-        fill="transparent"
-        strokeWidth={stroke}
-        strokeDasharray={`${circumference} ${circumference}`}
-        strokeDashoffset={strokeDashoffset}
-        strokeLinecap="round"
-        r={normalizedRadius}
-        cx={radius}
-        cy={radius}
-        style={{ transition: "stroke-dashoffset 0.35s ease" }}
-      />
-      <text
-        x="50%"
-        y="50%"
-        dominantBaseline="middle"
-        textAnchor="middle"
-        fontSize="14"
-        fontWeight="600"
-        fill="#111827"
-      >
-        {percent}%
-      </text>
-    </svg>
   );
 }
