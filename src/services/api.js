@@ -1,4 +1,4 @@
-const BASE_URL = "https://reqres.in/api";
+const BASE_URL = "https;//capstone-project-9o17.onrender.com";
 
 /* ============================
    AUTH
@@ -69,31 +69,44 @@ export async function forgotPassword(email) {
 /* ============================
    AUTH FETCH WRAPPER
 ============================ */
-
-/**
- * Fetch wrapper with token support
- * (ready for refresh-token logic later)
- */
 export async function fetchWithAuth(url, options = {}) {
   const token = localStorage.getItem("authToken");
 
-  const response = await fetch(url, {
+  const res = await fetch(`${BASE_URL}${url}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` }),
+      Authorization: `Bearer ${token}`,
       ...options.headers,
     },
   });
 
-  if (response.status === 401) {
-    // token expired → logout
-    localStorage.removeItem("authToken");
-    throw new Error("Session expired. Please sign in again.");
+  if (res.status === 401) {
+    const refresh = await refreshToken();
+    if (!refresh) throw new Error("Session expired");
+
+    return fetchWithAuth(url, options);
   }
 
-  return response;
+  return res.json();
 }
+
+async function refreshToken() {
+  const res = await fetch(`${BASE_URL}/auth/refresh`, {
+    method: "POST",
+    credentials: "include",
+  });
+
+  if (!res.ok) return false;
+
+  const data = await res.json();
+  localStorage.setItem("authToken", data.token);
+  return true;
+}
+/**
+ * Fetch wrapper with token support
+ * (ready for refresh-token logic later)
+ */
 
 /**
  * Logout helper
