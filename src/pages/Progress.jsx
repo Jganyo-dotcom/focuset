@@ -127,14 +127,33 @@ export default function Progress() {
     setGoals(getGoals());
   }, []);
 
-  const completedGoals = goals.filter(g => g.status === "Completed");
-  const daysStudied = goals.length;
+  /* ===============================
+     DATE GENERATION (LAST 28 DAYS)
+  =============================== */
+  const generateLast28Days = () => {
+    const days = [];
+    for (let i = 27; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      days.push(date.toISOString().split("T")[0]);
+    }
+    return days;
+  };
 
-  // 28 day calendar layout
-  const streakData = Array.from({ length: 28 }, (_, i) => {
-    const goal = goals[i];
+  const last28Days = generateLast28Days();
+
+  /* ===============================
+     HEATMAP DATA
+  =============================== */
+  const streakData = last28Days.map((date) => {
+    const goal = goals.find((g) => g.date === date);
     if (!goal) return 0;
-    return goal.progress >= 80 ? 60 : goal.progress >= 40 ? 30 : 15;
+
+    return goal.progress >= 80
+      ? 60
+      : goal.progress >= 40
+      ? 30
+      : 15;
   });
 
   const getColor = (minutes) => {
@@ -144,22 +163,65 @@ export default function Progress() {
     return "high";
   };
 
+  /* ===============================
+     STREAK CALCULATION
+  =============================== */
+  const calculateStreak = () => {
+    let streak = 0;
+
+    for (let i = last28Days.length - 1; i >= 0; i--) {
+      const goal = goals.find((g) => g.date === last28Days[i]);
+      if (goal && goal.progress > 0) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+
+    return streak;
+  };
+
+  const currentStreak = calculateStreak();
+
+  /* ===============================
+     BADGES LOGIC
+  =============================== */
+  const completedGoals = goals.filter(
+    (g) => g.status === "Completed"
+  );
+
+  const totalMinutes = goals.reduce(
+    (acc, g) => acc + (g.progress || 0),
+    0
+  );
+
+  const badges = [
+    { condition: currentStreak >= 5, icon: "🔥", label: "5 Day Streak" },
+    { condition: currentStreak >= 10, icon: "⚡", label: "10 Day Streak" },
+    { condition: totalMinutes >= 480, icon: "🛡️", label: "8 Hours Studied" },
+    {
+      condition: completedGoals.length >= 10,
+      icon: "🎯",
+      label: "10 Goals Completed",
+    },
+  ];
+
   return (
     <div className="progress-page">
-
       <h2 className="page-title">Progress</h2>
       <p className="subtitle">
         Track your consistency and growth over time
       </p>
 
-      {/* STUDY STREAK */}
+      {/* ===============================
+          STUDY STREAK
+      =============================== */}
       <div className="card streak-card">
-
         <div className="streak-header">
           <h3>Study Streak</h3>
 
           <div className="tabs">
-            {["Weekly", "Monthly", "All Time"].map(tab => (
+            {["Weekly", "Monthly", "All Time"].map((tab) => (
               <button
                 key={tab}
                 className={view === tab ? "active" : ""}
@@ -171,15 +233,12 @@ export default function Progress() {
           </div>
         </div>
 
-        {/* Calendar + Legend */}
         <div className="streak-body">
-
-          {/* Calendar Section */}
+          {/* Calendar */}
           <div className="calendar-section">
-
             <div className="week-labels">
-              {["S", "M", "T", "W", "T", "F", "S"].map(day => (
-                <span key={day}>{day}</span>
+              {["S", "M", "T", "W", "T", "F", "S"].map((day, i) => (
+                <span key={i}>{day}</span>
               ))}
             </div>
 
@@ -188,74 +247,90 @@ export default function Progress() {
                 <div
                   key={index}
                   className={`streak-box ${getColor(minutes)}`}
+                  title={`${minutes} minutes`}
                 />
               ))}
             </div>
-
           </div>
 
           {/* Legend */}
           <div className="legend-section">
-            <div><span className="legend-box empty"></span> 0hr</div>
-            <div><span className="legend-box low"></span> 15min</div>
-            <div><span className="legend-box medium"></span> 30min</div>
-            <div><span className="legend-box high"></span> 1hr+</div>
+            <div>
+              <span className="legend-box empty"></span> 0hr
+            </div>
+            <div>
+              <span className="legend-box low"></span> 15min
+            </div>
+            <div>
+              <span className="legend-box medium"></span> 30min
+            </div>
+            <div>
+              <span className="legend-box high"></span> 1hr+
+            </div>
           </div>
-
         </div>
 
         <p className="streak-summary">
-          You studied for <strong>{daysStudied} days</strong> this month.
+          🔥 Current streak: <strong>{currentStreak} days</strong>
         </p>
-
       </div>
 
-      {/* STUDY HISTORY */}
+      {/* ===============================
+          STUDY HISTORY
+      =============================== */}
       <div className="card history-card">
         <h3>Study History</h3>
 
         <table>
           <thead>
             <tr>
-              <th>Study Sessions</th>
-              <th>Time</th>
-              <th>Date</th>
+              <th>Study Session</th>
+              <th>Minutes</th>
+              <th>Status</th>
             </tr>
           </thead>
 
           <tbody>
-            {goals.map(goal => (
+            {goals.map((goal) => (
               <tr key={goal.id}>
                 <td>{goal.title}</td>
-                <td>{goal.progress} minutes</td>
-                <td>{new Date().toLocaleDateString()}</td>
+                <td>{goal.progress || 0}</td>
+                <td>{goal.status}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* BADGES */}
+      {/* ===============================
+          BADGES
+      =============================== */}
       <div className="card badges-card">
         <h3>Badges</h3>
 
         <div className="badge-grid">
-          <Badge icon="🔥" label="5 Days Streak" />
-          <Badge icon="🔒" label="5 Days Locked In" />
-          <Badge icon="🛡️" label="48hrs Studied" />
-          <Badge icon="🌙" label="Night Owl" />
-          <Badge icon="🎯" label="10 Goals Completed" />
-          <Badge icon="🎥" label="10 Study Sessions" />
+          {badges.map((badge, index) =>
+            badge.condition ? (
+              <Badge
+                key={index}
+                icon={badge.icon}
+                label={badge.label}
+                unlocked
+              />
+            ) : null
+          )}
         </div>
       </div>
-
     </div>
   );
 }
 
-function Badge({ icon, label }) {
+/* ===============================
+   BADGE COMPONENT
+================================ */
+function Badge({ icon, label, unlocked }) {
   return (
-    <div className="badge">
+    <div className={`badge ${unlocked ? "unlocked" : ""}`}>
       <div className="badge-icon">{icon}</div>
       <p>{label}</p>
     </div>
