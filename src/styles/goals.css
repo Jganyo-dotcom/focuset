@@ -218,31 +218,6 @@
   margin: auto;
 }
 
-.goals-page {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 24px;
-  background: var(--bg-page);
-}
-
-/* 🔝 Form + Summary */
-.top-row {
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 24px;
-}
-
-/* 🟣 Center Progress Ring */
-.progress-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  background: linear-gradient(135deg, #eef2ff, #faf5ff);
-}
-
 /* =========================
    Responsive
 ========================= */
@@ -279,15 +254,5 @@
 
   .goals-table tbody td {
     padding: 6px 0;
-  }
-}
-
-@media (max-width: 768px) {
-  .top-row {
-    grid-template-columns: 1fr;
-  }
-
-  .progress-center {
-    padding: 32px 0;
   }
 }

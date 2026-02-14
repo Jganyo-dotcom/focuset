@@ -1,279 +1,105 @@
-/* Variables */
+/* ==============================
+   VARIABLES
+================================ */
 :root {
   --sidebar-width: 260px;
   --topbar-height: 72px;
   --page-bg: #f9fafb;
   --sidebar-bg: #ffffff;
-  --sidebar-shadow: rgba(0, 0, 0, 0.08);
-  --z-sidebar: 1200;
-  --z-overlay: 1150;
-  --z-topbar: 1100;
+  --shadow: rgba(0, 0, 0, 0.08);
 }
 
-/* Root container */
+/* ==============================
+   ROOT LAYOUT
+================================ */
 .dashboard-layout {
   display: flex;
   min-height: 100vh;
   background: var(--page-bg);
-  position: relative;
-  overflow-x: hidden;
 }
 
-/* Sidebar base (keeps CSS scoped so navbar rules don't cascade into it) */
+/* ==============================
+   SIDEBAR
+================================ */
 .sidebar {
   width: var(--sidebar-width);
   background: var(--sidebar-bg);
-  box-shadow: 2px 0 12px var(--sidebar-shadow);
-  z-index: var(--z-sidebar);
+  box-shadow: 2px 0 12px var(--shadow);
   position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
-  transform: translateX(-100%); /* hidden by default on small screens */
-  transition: transform 0.28s ease;
+  overflow-y: auto;
+  transition: transform 0.3s ease;
+  z-index: 1200;
+}
+
+/* Mobile default hidden */
+@media (max-width: 1024px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+}
+
+/* ==============================
+   MAIN AREA
+================================ */
+.dashboard-main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
   display: flex;
   flex-direction: column;
-  overflow: auto;
-  color: inherit;
 }
 
-/* When sidebar is open (mobile) */
-.sidebar.open,
-.dashboard-layout.sidebar-open .sidebar {
-  transform: translateX(0);
+/* Mobile layout */
+@media (max-width: 1024px) {
+  .dashboard-main {
+    margin-left: 0;
+  }
 }
 
-/* Overlay (mobile only) */
+/* ==============================
+   TOPBAR
+================================ */
+.topbar {
+  height: var(--topbar-height);
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* ==============================
+   CONTENT AREA
+================================ */
+.dashboard-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+/* ==============================
+   OVERLAY (Mobile)
+================================ */
 .sidebar-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
-  z-index: var(--z-overlay);
+  z-index: 1100;
   display: none;
 }
 
-/* Main area that contains topbar + content */
-.dashboard-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  margin-left: 0; /* pushed on desktop via media query */
-}
-
-/* Topbar */
-.topbar {
-  height: var(--topbar-height);
-  padding: 0 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #fff;
-  border-bottom: 1px solid #e5e7eb;
-  position: sticky;
-  top: 0;
-  z-index: var(--z-topbar);
-  box-sizing: border-box;
-}
-
-/* Content area */
-.dashboard-content {
-  padding: 24px;
-  flex: 1;
-  box-sizing: border-box;
-  min-height: calc(100vh - var(--topbar-height));
-}
-
-/* -------------------------
-   Responsive behavior
-   ------------------------- */
-
-/* Mobile / tablet: sidebar overlays content and is hidden by default */
 @media (max-width: 1024px) {
-  .sidebar {
-    width: 220px;
-    transform: translateX(-100%);
-    position: fixed;
-    left: 0;
-  }
-
-  .sidebar.open,
-  .dashboard-layout.sidebar-open .sidebar {
-    transform: translateX(0);
-  }
-
   .sidebar-overlay {
     display: block;
   }
-
-  .dashboard-main {
-    margin-left: 0;
-  }
-
-  .topbar {
-    left: 0;
-    right: 0;
-    width: 100%;
-  }
-
-  .dashboard-content {
-    padding: 20px;
-  }
 }
-
-/* Small phones: slightly narrower sidebar */
-@media (max-width: 768px) {
-  .sidebar {
-    width: 200px;
-  }
-}
-
-/* Desktop: sidebar visible and main content pushed right */
-@media (min-width: 1025px) {
-  .sidebar {
-    transform: translateX(0); /* always visible */
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100vh;
-  }
-
-  .sidebar-overlay {
-    display: none;
-  }
-
-  /* push main content and topbar to the right of the fixed sidebar */
-  .dashboard-main {
-    margin-left: var(--sidebar-width);
-  }
-
-  .topbar {
-    left: var(--sidebar-width);
-    width: calc(100% - var(--sidebar-width));
-  }
-
-  /* ensure topbar sits above content but below sidebar if needed */
-  .topbar {
-    z-index: calc(var(--z-topbar));
-  }
-}
-
-/* Defensive: ensure sidebar children are visible and not affected by global navbar color */
-.sidebar,
-.sidebar * {
-  color: inherit;
-  visibility: visible;
-  opacity: 1;
-}
-
-/* Desktop topbar alignment — put in DashboardLayout.css after sidebar rules */
-@media (min-width: 1025px) {
-  /* Ensure main content is pushed to the right of the fixed sidebar */
-  .dashboard-main {
-    margin-left: var(--sidebar-width);
-  }
-
-  /* Topbar aligned with content area and stretched to the right edge */
-  .topbar {
-    position: fixed; /* fixed to viewport */
-    left: var(--sidebar-width); /* align left with content area */
-    right: 0; /* stretch to right edge */
-    top: 0;
-    width: auto; /* avoid calc() width issues */
-    box-sizing: border-box;
-    z-index: var(--z-topbar, 1300);
-  }
-
-  /* If you support a collapsed sidebar state, adjust topbar left */
-  .dashboard-layout.sidebar-collapsed .topbar {
-    left: var(--sidebar-narrow);
-  }
-}
-
-/* Ensure content is not hidden under the fixed/sticky topbar */
-:root {
-  --topbar-offset: calc(
-    var(--topbar-height) + 16px
-  ); /* 16px extra breathing room */
-}
-
-/* Apply safe top spacing to the content wrapper */
-.dashboard,
-.dashboard-content,
-.main-wrapper {
-  /* Use whichever wrapper you actually render as the page content container.
-     .dashboard is the main layout wrapper in the examples above.
-     .dashboard-content is the inner content area. .main-wrapper is optional. */
-  padding-top: var(--topbar-offset);
-  box-sizing: border-box;
-}
-
-/* Desktop: when topbar is fixed and content is pushed right by sidebar */
-@media (min-width: 1025px) {
-  .dashboard,
-  .dashboard-content,
-  .main-wrapper {
-    padding-top: var(--topbar-offset);
-  }
-}
-
-/* Mobile/tablet: topbar may be fixed or sticky — keep the same offset */
-@media (max-width: 1024px) {
-  .dashboard,
-  .dashboard-content,
-  .main-wrapper {
-    padding-top: var(--topbar-offset);
-  }
-}
-
-/* Topbar offset per breakpoint and remove extra first-child margins */
-:root {
-  --topbar-offset-desktop: calc(var(--topbar-height)); /* exact on desktop */
-  --topbar-offset-mobile: calc(
-    var(--topbar-height) - 39px
-  ); /* exact on mobile; change if you want breathing room */
-}
-
-/* Default: apply desktop offset to main content */
-.dashboard,
-.dashboard-content,
-.main-wrapper {
-  padding-top: var(--topbar-offset-desktop);
-  box-sizing: border-box;
-}
-
-/* Mobile/tablet: use mobile offset (no extra breathing room) */
-@media (max-width: 1024px) {
-  .dashboard,
-  .dashboard-content,
-  .main-wrapper {
-    padding-top: var(--topbar-offset-mobile);
-  }
-}
-
-/* Remove top margin from the first child inside content to avoid double spacing */
-.dashboard-content > *:first-child,
-.main-wrapper > *:first-child,
-.dashboard > *:first-child {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-}
-
-/* Specific: if the first element is a button or heading, ensure no extra gap */
-.dashboard-content h1:first-child,
-.dashboard-content h2:first-child,
-.dashboard-content h3:first-child,
-.dashboard-content p:first-child,
-.dashboard-content .card:first-child,
-.dashboard-content button:first-child {
-  margin-top: 0 !important;
-}
-
-/* Defensive: if some components add large top margins, clamp them */
-.dashboard-content > * {
-  margin-top: clamp(0px, 1rem, 24px);
-}
-
-/* If you prefer exact top spacing without extra breathing room, use this instead:
-   --topbar-offset: var(--topbar-height);
-*/

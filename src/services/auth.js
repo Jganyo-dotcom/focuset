@@ -73,3 +73,24 @@ export async function forgotPassword(email) {
 
   return data; 
 }
+
+export async function resetPassword(token, password) {
+  const response = await fetch(`${BASE_URL}/reset-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      token,
+      password,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      data.message || data.error || "Failed to reset password"
+    );
+  }
+
+  return data;
+}
