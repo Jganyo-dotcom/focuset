@@ -1,3 +1,10 @@
+/* Apply box-sizing globally to prevent size calculation errors */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 .signup-container {
   min-height: 100vh;
   display: flex;
@@ -19,8 +26,10 @@
 .signup-form h2 {
   text-align: center;
   margin-bottom: 24px;
+  color: #111827;
 }
 
+/* Base Input Layouts */
 .signup-form input {
   width: 100%;
   padding: 14px 16px;
@@ -28,29 +37,45 @@
   border-radius: 8px;
   border: 1px solid #d1d5db;
   font-size: 14px;
+  background-color: #ffffff;
+  outline: none;
+  transition: border-color 0.2s;
 }
 
+.signup-form input:focus {
+  border-color: #4f46e5;
+}
+
+/* Password wrapper adjustments */
 .password-field {
   position: relative;
+  width: 100%;
 }
 
+/* Targeted structural fix so input doesn't overlap text fields */
 .password-field input {
-  padding-right: 52px;
+  padding-right: 48px;
 }
 
+/* Precise Icon Center Placement */
 .password-icon {
   position: absolute;
-  right: 14px;
-  top: 50%;
+  right: 12px;
+  /* Matches input height center precisely without counting margins */
+  top: 24px;
   transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
   color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
 }
 
 .password-icon:disabled {
-  opacity: 0.4;
+  opacity: 0.3;
   cursor: not-allowed;
 }
 
@@ -63,12 +88,19 @@
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+
+.signup-btn:hover {
+  background: #1f2937;
 }
 
 .error-text {
   color: #dc2626;
   font-size: 14px;
   margin-bottom: 12px;
+  margin-top: -4px;
 }
 
 .success-toast {
@@ -82,10 +114,9 @@
 }
 
 /* ===============================
-   RESPONSIVE
+   RESPONSIVE LAYOUTS
 ================================ */
 
-/* Tablets */
 @media (max-width: 768px) {
   .signup-form {
     padding: 24px;
@@ -102,16 +133,19 @@
     padding: 12px 14px;
   }
 
+  .password-icon {
+    top: 21px; /* Realignment for compressed mobile inputs */
+  }
+
   .signup-btn {
     padding: 12px;
     font-size: 14px;
   }
 }
 
-/* Phones */
 @media (max-width: 480px) {
   .signup-container {
-    padding: 12px;
+    padding: 16px;
   }
 
   .signup-form {
@@ -124,34 +158,16 @@
   }
 
   .signup-form input {
-    font-size: 12px;
-    padding: 10px 12px;
+    font-size: 13px;
+    padding: 12px 14px;
+  }
+
+  .password-icon {
+    top: 21px;
   }
 
   .signup-btn {
     font-size: 13px;
-    padding: 10px;
-  }
-
-  .error-text,
-  .success-toast {
-    font-size: 12px;
-  }
-}
-
-/* Extra small phones */
-@media (max-width: 360px) {
-  .signup-form {
-    padding: 16px;
-    border-radius: 12px;
-  }
-
-  .signup-form h2 {
-    font-size: 16px;
-  }
-
-  .signup-btn {
-    font-size: 12px;
-    padding: 8px;
+    padding: 12px;
   }
 }

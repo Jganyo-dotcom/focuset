@@ -8,21 +8,18 @@ export default function DashboardLayout({ children }) {
 
   return (
     <div className="dashboard-layout">
-      {/* SIDEBAR */}
+      {/* SIDEBAR CONTAINER */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      {/* OVERLAY (mobile only) */}
-      {sidebarOpen && (
-        <div
-          className="sidebar-overlay"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+      {/* MOBILE OVERLAY BACKDROP MASK */}
+      <div
+        className={`sidebar-overlay ${sidebarOpen ? "active" : ""}`}
+        onClick={() => setSidebarOpen(false)}
+      />
 
-      {/* MAIN CONTENT */}
+      {/* MAIN CONTAINER LAYER */}
       <div className="dashboard-main">
         <Topbar onMenuClick={() => setSidebarOpen(true)} />
-
         <div className="dashboard-content">{children}</div>
       </div>
     </div>

@@ -14,7 +14,7 @@
   padding: 0;
 }
 
-.logo{
+.logo {
   height: 20px;
   width: auto;
   object-fit: contain;
@@ -104,11 +104,10 @@
   font-size: 16px;
 }
 
-.navbar-mobile-menu .signup-btn{
+.navbar-mobile-menu .signup-btn {
   color: #ffffff;
   background-color: #4f46e5;
 }
-
 
 /* Responsive: show hamburger and collapse links on small screens */
 @media (max-width: 768px) {
@@ -149,8 +148,7 @@
   }
 }
 
-
-.signup-btn{
+.signup-btn {
   background-color: #4f46e5;
   color: #ffffff;
   padding: 8px 16px;

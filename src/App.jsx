@@ -1,42 +1,43 @@
 import { Routes, Route } from "react-router-dom";
 
+// Public Page Imports
 import Landing from "./pages/Landing";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import ResetPassword from "./pages/ResetPassword";
-import ForgotPassword from "./pages/ForgotPassword";
 import GoogleCallback from "./pages/GoogleCallback";
 
+// Protected Dashboard Page Imports
 import Dashboard from "./pages/Dashboard";
 import Goals from "./pages/Goals";
 import Progress from "./pages/Progress";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 
+// Security & Layout Wrappers
 import ProtectedRoute from "./routes/ProtectedRoute";
 import DashboardLayout from "./layouts/DashboardLayout";
 
 function App() {
   return (
     <Routes>
-      {/* =====================
-          PUBLIC ROUTES
-      ====================== */}
+      {/* =========================================================
+          PUBLIC ACCESSIBLE ROUTES
+          ========================================================= */}
       <Route path="/" element={<Landing />} />
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
+
+      {/* Dynamic parameters for incoming email token verifications */}
+      <Route path="/forgot-password" element={<ResetPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
 
-      {/* Google OAuth callback */}
-      <Route
-        path="/auth/google/callback"
-        element={<GoogleCallback />}
-      />
+      {/* Google OAuth Server Redirect Callback Endpoint */}
+      <Route path="/auth/google/callback" element={<GoogleCallback />} />
 
-      {/* =====================
-          PROTECTED ROUTES
-      ====================== */}
+      {/* =========================================================
+          PROTECTED USER INTERFACES (Requires Valid Session Token)
+          ========================================================= */}
       <Route
         path="/dashboard"
         element={

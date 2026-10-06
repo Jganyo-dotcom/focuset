@@ -16,10 +16,12 @@
   display: flex;
   min-height: 100vh;
   background: var(--page-bg);
+  position: relative;
+  width: 100%;
 }
 
 /* ==============================
-   SIDEBAR
+   SIDEBAR STRUCTURAL ALIGNMENT
 ================================ */
 .sidebar {
   width: var(--sidebar-width);
@@ -27,21 +29,27 @@
   box-shadow: 2px 0 12px var(--shadow);
   position: fixed;
   top: 0;
-  left: 0;
-  height: 100vh;
-  overflow-y: auto;
-  transition: transform 0.3s ease;
-  z-index: 1200;
+  left: calc(
+    var(--sidebar-width) * -1
+  ); /* 🚀 FIX: Hidden cleanly left instead of broken transforms */
+  height: 100vh !important; /* 🚀 FIX: Spans top to down completely */
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  transition: left 0.3s ease;
+  z-index: 3000; /* Stays above topbar on mobile */
 }
 
-/* Mobile default hidden */
-@media (max-width: 1024px) {
-  .sidebar {
-    transform: translateX(-100%);
-  }
+/* Triggered on mobile when the hamburger menu is clicked */
+.sidebar.open {
+  left: 0 !important;
+}
 
-  .sidebar.open {
-    transform: translateX(0);
+/* Desktop Fix: Keeps it locked open safely on big screens */
+@media (min-width: 1025px) {
+  .sidebar {
+    left: 0 !important;
+    box-shadow: 1px 0 0 rgba(0, 0, 0, 0.05);
   }
 }
 
@@ -50,15 +58,16 @@
 ================================ */
 .dashboard-main {
   flex: 1;
-  margin-left: var(--sidebar-width);
+  margin-left: var(--sidebar-width); /* Reserves space for desktop sidebar */
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
-/* Mobile layout */
+/* Mobile layout reset */
 @media (max-width: 1024px) {
   .dashboard-main {
-    margin-left: 0;
+    margin-left: 0; /* Clears sidebar space on smaller viewports */
   }
 }
 
@@ -72,34 +81,104 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 32px;
+  padding: 0 24px;
   position: sticky;
   top: 0;
   z-index: 1000;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.menu-btn {
+  display: none;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  margin-right: 8px;
+}
+
+.search-input {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  outline: none;
+}
+
+/* Right side elements */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  font-size: 24px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .menu-btn {
+    display: inline-block; /* Shows your hamburger menu button */
+  }
+
+  .search-input {
+    width: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .search-input {
+    display: none;
+  }
+
+  .topbar {
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 767px) {
+  .topbar-left {
+    gap: 8px;
+  }
 }
 
 /* ==============================
-   CONTENT AREA
+   CONTENT AREA WORKSPACE
 ================================ */
 .dashboard-content {
   flex: 1;
   padding: 24px;
   overflow-y: auto;
+  width: 100%;
 }
 
 /* ==============================
-   OVERLAY (Mobile)
+   OVERLAY (Mobile Backdrop Mask)
 ================================ */
 .sidebar-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
-  z-index: 1100;
-  display: none;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
 }
 
-@media (max-width: 1024px) {
+/* 🚀 FIX: Overlay animation maps directly to layout states */
+.sidebar-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (min-width: 1025px) {
   .sidebar-overlay {
-    display: block;
+    display: none !important; /* Hard-kill on desktops */
   }
 }

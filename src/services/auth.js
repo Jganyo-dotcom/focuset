@@ -53,7 +53,7 @@ export async function loginUser(main, password) {
   }
   return data;
 
-   // { user, token }
+  // { user, token }
 }
 
 export async function forgotPassword(email) {
@@ -66,30 +66,44 @@ export async function forgotPassword(email) {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(
-      data.message || data.error || "Failed to send reset link"
-    );
+    throw new Error(data.message || data.error || "Failed to send reset link");
   }
 
-  return data; 
+  return data;
 }
 
-export async function resetPassword(token, password) {
+export async function resetPassword(token, newPassword) {
   const response = await fetch(`${BASE_URL}/reset-password`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       token,
-      password,
+      newPassword,
     }),
   });
 
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(
-      data.message || data.error || "Failed to reset password"
-    );
+    throw new Error(data.message || data.error || "Failed to reset password");
+  }
+
+  return data;
+}
+
+export async function requestPasswordReset(email) {
+  const response = await fetch(`${BASE_URL}/reset-password-link`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      identifier:email,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || data.error || "Failed to reset password");
   }
 
   return data;

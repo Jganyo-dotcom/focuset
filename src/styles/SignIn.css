@@ -1,6 +1,6 @@
 .signin-page {
   min-height: 100vh;
-  background: #7f89c5; 
+  background: #7f89c5;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -69,42 +69,21 @@
 }
 
 .google-btn {
-  width: 100%;
-  height: 44px;
-  border-radius: 12px;
-  border: 1.5px solid rgba(255, 255, 255, 0.6);
-  background: transparent;
+  background: none;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.15s ease;
-  backdrop-filter: blur(6spx);
-}
-
-.google-btn img {
-  width: 18px;
-  height: 18px;
-  display: block;
-  background: rgba(225, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #ffffff;
+  gap: 8px;
 }
 
 .google-btn span {
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  color: #ffffff;
-}
-
-.google-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.google-btn:active {
-  transform: scale(0.97);
+  font-weight: bold;
+  color: #fff1ff;
 }
 
 /* SIGNUP TEXT */
@@ -167,31 +146,6 @@
 .forgot-password:hover,
 .back-login:hover {
   text-decoration: underline;
-}
-
-.success-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #22c55e;
-  color: white;
-  font-size: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  animation: pop 0.4s ease-out;
-}
-
-@keyframes pop {
-  0% {
-    transform: scale(0.5);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
 }
 
 /* ===============================

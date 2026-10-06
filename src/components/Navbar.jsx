@@ -49,39 +49,71 @@ export default function Navbar() {
         </Link>
       </div>
 
-      {/* LINKS */}
+      {/* DESKTOP LINKS */}
       <div className="navbar-right">
-        <ul className={`nav-links ${open ? "open" : ""}`}>
-          <li><Link to="/" onClick={closeMenu}>Home</Link></li>
-          <li><Link to="/dashboard" onClick={closeMenu}>Dashboard</Link></li>
-          <li><Link to="/goals" onClick={closeMenu}>Goals</Link></li>
-          <li><Link to="/progress" onClick={closeMenu}>Progress</Link></li>
-          <li><Link to="/signin" onClick={closeMenu}>Sign In</Link></li>
+        <ul className="nav-links">
+          <li>
+            <Link to="/" onClick={closeMenu}>
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link to="/dashboard" onClick={closeMenu}>
+              Dashboard
+            </Link>
+          </li>
+          <li>
+            <Link to="/goals" onClick={closeMenu}>
+              Goals
+            </Link>
+          </li>
+          <li>
+            <Link to="/progress" onClick={closeMenu}>
+              Progress
+            </Link>
+          </li>
+          <li>
+            <Link to="/signin" onClick={closeMenu}>
+              Sign In
+            </Link>
+          </li>
           <li>
             <Link to="/signup" className="signup-btn" onClick={closeMenu}>
               Sign Up
             </Link>
           </li>
         </ul>
-
-        {/* HAMBURGER */}
-        <button
-          className="navbar-hamburger"
-          aria-label="Toggle menu"
-          onClick={() => setOpen(!open)}
-        >
-          ☰
-        </button>
       </div>
+
+      {/* HAMBURGER (Moved out of navbar-right to stay on the far edge) */}
+      <button
+        className="navbar-hamburger"
+        aria-label="Toggle menu"
+        onClick={() => setOpen(!open)}
+      >
+        ☰
+      </button>
 
       {/* MOBILE MENU */}
       <div className={`navbar-mobile-menu ${open ? "open" : ""}`}>
-        <Link to="/" onClick={closeMenu}>Home</Link>
-        <Link to="/dashboard" onClick={closeMenu}>Dashboard</Link>
-        <Link to="/goals" onClick={closeMenu}>Goals</Link>
-        <Link to="/progress" onClick={closeMenu}>Progress</Link>
-        <Link to="/signin" onClick={closeMenu}>Sign In</Link>
-        <Link to="/signup" onClick={closeMenu}>Sign Up</Link>
+        <Link to="/" onClick={closeMenu}>
+          Home
+        </Link>
+        <Link to="/dashboard" onClick={closeMenu}>
+          Dashboard
+        </Link>
+        <Link to="/goals" onClick={closeMenu}>
+          Goals
+        </Link>
+        <Link to="/progress" onClick={closeMenu}>
+          Progress
+        </Link>
+        <Link to="/signin" onClick={closeMenu}>
+          Sign In
+        </Link>
+        <Link to="/signup" onClick={closeMenu} className="signup-btn">
+          Sign Up
+        </Link>
       </div>
     </nav>
   );

@@ -27,9 +27,10 @@ const SignUp = () => {
     if (name === "phone") {
       if (!/^[0-9+]*$/.test(value)) return;
     }
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value, // Used structured destructuring variables directly
     });
   };
 
@@ -77,7 +78,7 @@ const SignUp = () => {
       const result = await registerUser(formData);
 
       // Save auth data
-      
+
       setSuccess(result.message || "Account created successfully!");
 
       setTimeout(() => {
