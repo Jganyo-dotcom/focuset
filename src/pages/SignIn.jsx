@@ -26,7 +26,7 @@ export default function SignIn() {
 
     setLoading(true);
 
-    // Add this hook import at the top if your context provides state updaters
+    // Add thi hook import at the top if your context provides state updaters
     // const { setIsAuthenticated } = useAuth();
 
     try {
