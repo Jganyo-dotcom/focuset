@@ -1,6 +1,6 @@
 // services/goalsService.js
-const BASE_URL = "https://capstone-project-9o17.onrender.com/student";
-//const BASE_URL = "http://127.0.0.1:45555/student";
+//const BASE_URL = "https://capstone-project-9o17.onrender.com/student";
+const BASE_URL = "http://127.0.0.1:45555/student";
 
 export async function createGoal(goalData) {
   const token = localStorage.getItem("authToken");

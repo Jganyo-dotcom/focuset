@@ -25,6 +25,7 @@ export default function StreakModal({
     setLoading(true);
     setError(null);
     try {
+      const token = localStorage.getItem("authToken");
       const res = await fetch(`${apiB}/streaks/ALL/${id}`, {
         headers: {
           "Content-Type": "application/json",

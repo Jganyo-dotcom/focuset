@@ -1,7 +1,5 @@
 // src/pages/Goals.jsx
 import { useEffect, useState } from "react";
-// wrap the page
-import ProgressRing from "../components/ProgressRing";
 import GoalForm from "../components/GoalForm";
 import GoalMiniModal from "../components/GoalMiniModal";
 import StreakModal from "../components/StreakModal";
@@ -49,9 +47,7 @@ export default function Goals() {
 
   // Helper to open mini-goal modal
   const openGoal = (goal) => {
-    console.log("Opening goal modal:", goal._id);
     setSelectedGoal(goal);
-    console.log("openGoal:", goal._id, goal.steps);
   };
 
   // Helper to open streak modal for a goal id
@@ -59,8 +55,7 @@ export default function Goals() {
     setOpenStreakGoalId(goalId);
   };
 
-  // Replace with your actual API base or keep empty if you use a proxy
-  const apiBase = ""; // e.g., "http://localhost:5000"
+  const apiBase = "";
 
   return (
     <>
@@ -70,31 +65,30 @@ export default function Goals() {
         <div className="left-column">
           <GoalForm />
 
-            {/* ACTIVE GOALS */}
-            <section className="card">
-              <h3>Active Goals</h3>
-              <p className="muted">Here's what you're currently working on.</p>
+          {/* ACTIVE GOALS */}
+          <section className="card">
+            <h3>Active Goals</h3>
+            <p className="muted">Here's what you're currently working on.</p>
 
-              {loading ? (
-                <p>Loading goals...</p>
-              ) : (
+            {loading ? (
+              <p className="loading-text">Loading goals...</p>
+            ) : (
+              <div className="table-container">
                 <table className="goals-table">
                   <thead>
                     <tr>
-                      <th>Goal Name</th>
-                      <th>Progress</th>
+                      <th style={{ width: "32%" }}>Goal Name</th>
                       <th>Start Date</th>
                       <th>Due Date</th>
                       <th>Status</th>
-                      <th></th>
-                      <th></th>
+                      <th style={{ textAlign: "right" }}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {activeGoals.length === 0 ? (
                       <tr>
-                        <td colSpan="6" className="muted center">
-                          No active goals
+                        <td colSpan="5" className="muted center">
+                          No active goals found
                         </td>
                       </tr>
                     ) : (
@@ -106,26 +100,18 @@ export default function Goals() {
                               className="row-btn"
                               onClick={() => openGoal(goal)}
                               aria-label={`Open ${goal.title} mini goals`}
-                              style={{
-                                all: "unset",
-                                display: "block",
-                                width: "100%",
-                                cursor: "pointer",
-                              }}
                             >
                               {goal.title}
                             </button>
                           </td>
-
                           <td>{goal.startDate?.slice(0, 10)}</td>
                           <td>{goal.endDate?.slice(0, 10)}</td>
-                          <td className={`status ${goal.status}`}>
-                            {goal.status}
-                          </td>
-
-                         
-
                           <td>
+                            <span className={`status ${goal.status}`}>
+                              {goal.status}
+                            </span>
+                          </td>
+                          <td style={{ textAlign: "right" }}>
                             <button
                               className="streak-btn"
                               onClick={(e) => {
@@ -141,24 +127,26 @@ export default function Goals() {
                     )}
                   </tbody>
                 </table>
-              )}
-            </section>
+              </div>
+            )}
+          </section>
 
-            {/* GOAL ARCHIVE */}
-            <section className="card">
-              <h3>Goal Archive</h3>
-              <p className="muted">View completed or old goals</p>
+          {/* GOAL ARCHIVE */}
+          <section className="card">
+            <h3>Goal Archive</h3>
+            <p className="muted">View completed or past goals</p>
 
-              {loading ? (
-                <p>Loading archive...</p>
-              ) : (
+            {loading ? (
+              <p className="loading-text">Loading archive...</p>
+            ) : (
+              <div className="table-container">
                 <table className="goals-table">
                   <thead>
                     <tr>
-                      <th>Goal Name</th>
+                      <th style={{ width: "35%" }}>Goal Name</th>
                       <th>Completed On</th>
                       <th>Notes</th>
-                      <th></th>
+                      <th style={{ textAlign: "right" }}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -177,19 +165,13 @@ export default function Goals() {
                               className="row-btn"
                               onClick={() => openGoal(goal)}
                               aria-label={`Open ${goal.title} mini goals`}
-                              style={{
-                                all: "unset",
-                                display: "block",
-                                width: "100%",
-                                cursor: "pointer",
-                              }}
                             >
                               {goal.title}
                             </button>
                           </td>
                           <td>{goal.endDate?.slice(0, 10)}</td>
-                          <td>{goal.notes || "-"}</td>
-                          <td>
+                          <td className="truncate-cell">{goal.notes || "-"}</td>
+                          <td style={{ textAlign: "right" }}>
                             <button
                               className="edit-btn"
                               onClick={(e) => {
@@ -205,24 +187,31 @@ export default function Goals() {
                     )}
                   </tbody>
                 </table>
-              )}
-            </section>
-          </div>
+              </div>
+            )}
+          </section>
+        </div>
 
         {/* RIGHT COLUMN */}
         <div className="right-column">
           <section className="card summary-card">
             <h3>Goal Summary</h3>
             <div className="summary-item">
-              <span className="dot blue" /> Active Goals{" "}
+              <span>
+                <span className="dot blue" /> Active Goals
+              </span>
               <b>{activeGoals.length}</b>
             </div>
             <div className="summary-item">
-              <span className="dot green" /> Completed Goals{" "}
+              <span>
+                <span className="dot green" /> Completed Goals
+              </span>
               <b>{archivedGoals.length}</b>
             </div>
             <div className="summary-item">
-              <span className="dot red" /> Overdue Goals{" "}
+              <span>
+                <span className="dot red" /> Overdue Goals
+              </span>
               <b>
                 {
                   activeGoals.filter(
@@ -247,7 +236,7 @@ export default function Goals() {
         />
       )}
 
-      {/* Streak modal (single instance) */}
+      {/* Streak modal */}
       {openStreakGoalId && (
         <StreakModal
           apiBase={apiBase}

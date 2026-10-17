@@ -1,3 +1,6 @@
+/* =========================
+   Variables & Theme
+========================= */
 :root {
   --bg-page: #f6f7fb;
   --card-bg: #ffffff;
@@ -12,7 +15,6 @@
 /* =========================
    Page Layout
 ========================= */
-
 .goals-grid {
   display: grid;
   grid-template-columns: 1fr 320px;
@@ -20,6 +22,7 @@
   padding: 24px;
   background: var(--bg-page);
   min-height: calc(100vh - 64px);
+  box-sizing: border-box;
 }
 
 .left-column,
@@ -32,12 +35,12 @@
 /* =========================
    Cards
 ========================= */
-
 .card {
   background: var(--card-bg);
   border-radius: var(--radius);
   padding: 24px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(229, 231, 235, 0.6);
 }
 
 .card h3 {
@@ -56,21 +59,32 @@
   text-align: center;
 }
 
+.loading-text {
+  padding: 16px 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
 /* =========================
-   Goals Table
+   Goals Table & Long Text Handling
 ========================= */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
 
 .goals-table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 14px;
-  margin-top: 16px;
+  border-spacing: 0 10px;
+  margin-top: 12px;
+  table-layout: fixed; /* Ensures clean column proportions */
 }
 
 .goals-table thead th {
   text-align: left;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-muted);
   padding: 0 12px;
 }
@@ -78,13 +92,22 @@
 .goals-table tbody tr {
   background: #ffffff;
   border-radius: 14px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.goals-table tbody tr:hover {
+  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.08);
 }
 
 .goals-table tbody td {
-  padding: 14px 12px;
+  padding: 16px 12px;
   font-size: 14px;
   color: var(--text-dark);
+  vertical-align: middle;
+  word-break: break-word; /* Prevents overflow from long words */
 }
 
 .goals-table tbody tr td:first-child {
@@ -97,13 +120,30 @@
   border-bottom-right-radius: 14px;
 }
 
+/* Long text handling inside table cells */
+.truncate-cell {
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* =========================
    Goal Title Button
 ========================= */
-
 .row-btn {
+  all: unset;
+  display: block;
+  width: 100%;
   font-weight: 500;
   color: var(--text-dark);
+  cursor: pointer;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limits long titles to 2 lines cleanly */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
 }
 
 .row-btn:hover {
@@ -113,7 +153,6 @@
 /* =========================
    Status Pills
 ========================= */
-
 .status {
   padding: 6px 12px;
   border-radius: 999px;
@@ -134,9 +173,8 @@
 }
 
 /* =========================
-   Buttons
+   Action Buttons
 ========================= */
-
 .streak-btn,
 .edit-btn {
   padding: 6px 14px;
@@ -146,6 +184,7 @@
   cursor: pointer;
   background: #f3f4f6;
   color: var(--text-dark);
+  font-weight: 500;
   transition: all 0.2s ease;
 }
 
@@ -158,9 +197,9 @@
 /* =========================
    Summary Card (Right Column)
 ========================= */
-
 .summary-card {
-  background: #eef2ff;
+  background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%);
+  border: 1px solid #e0e7ff;
 }
 
 .summary-item {
@@ -179,13 +218,12 @@
 /* =========================
    Dots
 ========================= */
-
 .dot {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   display: inline-block;
-  margin-right: 10px;
+  margin-right: 8px;
 }
 
 .dot.blue {
@@ -203,7 +241,6 @@
 /* =========================
    Error Message
 ========================= */
-
 .error {
   margin: 24px;
   padding: 14px;
@@ -211,17 +248,12 @@
   color: #b91c1c;
   border-radius: 12px;
   font-size: 14px;
-}
-
-.progress-ring {
-  display: block;
-  margin: auto;
+  font-weight: 500;
 }
 
 /* =========================
-   Responsive
+   Responsive Design
 ========================= */
-
 @media (max-width: 1024px) {
   .goals-grid {
     grid-template-columns: 1fr;
@@ -242,6 +274,10 @@
     padding: 18px;
   }
 
+  .goals-table {
+    table-layout: auto;
+  }
+
   .goals-table thead {
     display: none;
   }
@@ -249,10 +285,26 @@
   .goals-table tbody tr {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
+    padding: 16px;
   }
 
   .goals-table tbody td {
-    padding: 6px 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .goals-table tbody td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+
+  .truncate-cell {
+    max-width: 100%;
+    white-space: normal;
   }
 }

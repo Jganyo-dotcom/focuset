@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { createGoal } from "../services/goal";
-import { generateSubscription } from "../utils/notification";
 import "./goalform.css";
 
 export default function GoalForm() {
@@ -9,7 +8,7 @@ export default function GoalForm() {
   const [startDate, setStartDate] = useState("");
   const [endgoal, setEndgoal] = useState("");
   const [frequency, setfrequency] = useState("Daily");
-  const [steps, setSteps] = useState([{ name: "", subscription: null }]);
+  const [steps, setSteps] = useState([{ name: "" }]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
@@ -23,7 +22,7 @@ export default function GoalForm() {
         i === index ? { ...s, name: value } : s,
       );
       if (index === prev.length - 1 && value.trim() !== "") {
-        updated.push({ name: "", subscription: null });
+        updated.push({ name: "" });
       }
       while (
         updated.length > 1 &&
@@ -34,33 +33,6 @@ export default function GoalForm() {
       }
       return updated;
     });
-  };
-
-  // Generate a single subscription and assign to all non-empty steps
-  const handleGenerateSubscriptionForAll = async () => {
-    setError(null);
-    setSuccessMsg(null);
-    const validSteps = steps.filter((s) => s.name.trim() !== "");
-    if (validSteps.length === 0) {
-      setError("No mini goals to subscribe.");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const sub = await generateSubscription(); // single subscription for all mini-goals
-      setSteps((prev) =>
-        prev.map((s) =>
-          s.name.trim() !== "" ? { ...s, subscription: sub } : s,
-        ),
-      );
-      setSuccessMsg("Subscription generated and applied to all mini goals.");
-    } catch (err) {
-      console.error(err);
-      setError("Failed to generate subscription for mini goals.");
-    } finally {
-      setLoading(false);
-    }
   };
 
   // Validate before submit
@@ -83,13 +55,6 @@ export default function GoalForm() {
       setError("At least one mini goal is required");
       return false;
     }
-    const unsubscribed = validSteps.some((s) => !s.subscription);
-    if (unsubscribed) {
-      setError(
-        "Please generate subscription for all mini goals before saving.",
-      );
-      return false;
-    }
     return true;
   };
 
@@ -104,15 +69,16 @@ export default function GoalForm() {
 
     const payload = {
       title: title.trim(),
+      description: description.trim(),
       startDate: new Date(startDate).toISOString(),
       endgoal: new Date(endgoal).toISOString(),
       status: "active",
+      frequency: frequency,
       steps: steps
         .filter((s) => s.name.trim() !== "")
         .map((s, i) => ({
           index: i,
           name: s.name.trim(),
-          subscription: s.subscription,
           frequency: frequency,
         })),
     };
@@ -125,7 +91,7 @@ export default function GoalForm() {
       setStartDate("");
       setEndgoal("");
       setfrequency("Daily");
-      setSteps([{ name: "", subscription: null }]);
+      setSteps([{ name: "" }]);
       console.log("Created goal:", response?.data || response);
     } catch (err) {
       console.error(err);
@@ -201,25 +167,10 @@ export default function GoalForm() {
               onChange={(e) => handleStepChange(index, e.target.value)}
               placeholder={`Mini goal ${index + 1}`}
             />
-            {step.subscription && step.name.trim() !== "" ? (
-              <span className="muted">Subscribed ✅</span>
-            ) : (
-              step.name.trim() !== "" && (
-                <span className="muted">Not subscribed</span>
-              )
-            )}
           </div>
         ))}
 
         <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-          <button
-            type="button"
-            onClick={handleGenerateSubscriptionForAll}
-            disabled={loading}
-          >
-            Subscribe
-          </button>
-
           <button type="submit" className="primary-btn" disabled={loading}>
             {loading ? "Creating..." : "Save Goal"}
           </button>
