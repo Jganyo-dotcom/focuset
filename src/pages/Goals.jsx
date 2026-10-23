@@ -1,4 +1,3 @@
-// src/pages/Goals.jsx
 import { useEffect, useState } from "react";
 import GoalForm from "../components/GoalForm";
 import GoalMiniModal from "../components/GoalMiniModal";

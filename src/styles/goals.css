@@ -4,54 +4,143 @@
 :root {
   --bg-page: #f6f7fb;
   --card-bg: #ffffff;
-  --primary: #8b5cf6;
+  --primary: #7c5cf0;
+  --primary-dark: #5b3fd0;
   --primary-soft: #ede9fe;
-  --text-dark: #111827;
+  --text-dark: #1b1b2f;
   --text-muted: #6b7280;
-  --border: #e5e7eb;
+  --border: #e8e8f2;
   --radius: 18px;
+
+  --mauve: #8b8594;
+  --chip-bg: #e6eafc;
+  --chip-text: #3f51b5;
+  --ok: #12b886;
+  --ok-soft: #e3f8f1;
+  --warn: #f59f00;
+  --danger: #f03e5f;
+  --shadow-sm: 0 2px 8px rgba(40, 30, 90, 0.06);
+  --shadow-md: 0 10px 28px rgba(40, 30, 90, 0.1);
 }
 
 /* =========================
-   Page Layout
+   Page Layout (mobile first)
+   Order: form, summary, active goals, archive
 ========================= */
 .goals-grid {
   display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 24px;
-  padding: 24px;
-  background: var(--bg-page);
-  min-height: calc(100vh - 64px);
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  padding: 16px;
   box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: calc(100vh - 64px);
+  align-items: start;
+  background:
+    radial-gradient(circle at 0% 0%, #e9e4ff 0%, transparent 38%),
+    radial-gradient(circle at 100% 100%, #fde7f1 0%, transparent 35%),
+    var(--bg-page);
 }
 
 .left-column,
 .right-column {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  display: contents;
+}
+
+.goals-grid .left-column > *,
+.goals-grid .right-column > * {
+  min-width: 0;
+}
+
+.goals-grid .left-column > :nth-child(1) {
+  order: 1;
+}
+.goals-grid .right-column > .summary-card {
+  order: 2;
+}
+.goals-grid .left-column > :nth-child(2) {
+  order: 3;
+}
+.goals-grid .left-column > :nth-child(3) {
+  order: 4;
+}
+
+/* Gentle entrance animation */
+@keyframes goals-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.goals-grid > .left-column > *,
+.goals-grid > .right-column > * {
+  animation: goals-fade-up 0.5s ease both;
+}
+
+.goals-grid .left-column > :nth-child(2) {
+  animation-delay: 0.08s;
+}
+.goals-grid .left-column > :nth-child(3) {
+  animation-delay: 0.16s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .goals-grid > .left-column > *,
+  .goals-grid > .right-column > * {
+    animation: none;
+  }
 }
 
 /* =========================
    Cards
+   (scoped so other pages' .card styles can't leak in)
 ========================= */
-.card {
+.goals-grid .card {
+  position: relative;
+  max-width: none;
+  margin: 0;
+  padding: 20px 18px;
   background: var(--card-bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 24px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(229, 231, 235, 0.6);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
 
-.card h3 {
-  font-size: 18px;
-  font-weight: 600;
+.goals-grid .card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Section headings with a gradient accent bar */
+.goals-grid .card > h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: 700;
   color: var(--text-dark);
-  margin-bottom: 4px;
+  text-align: left;
 }
 
-.muted {
-  font-size: 14px;
+.goals-grid .card > h3::before {
+  content: "";
+  width: 5px;
+  height: 20px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #8d9ff3, #b588c6);
+}
+
+.goals-grid .card .muted {
+  margin: 0 0 10px 15px;
+  font-size: 13px;
+  line-height: 1.5;
   color: var(--text-muted);
 }
 
@@ -60,251 +149,542 @@
 }
 
 .loading-text {
-  padding: 16px 0;
+  padding: 24px 0;
+  text-align: center;
   color: var(--text-muted);
   font-size: 14px;
+  animation: goals-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes goals-pulse {
+  50% {
+    opacity: 0.45;
+  }
 }
 
 /* =========================
-   Goals Table & Long Text Handling
+   Create a New Goal (GoalForm, styled by element)
 ========================= */
-.table-container {
+.goals-grid .left-column > :nth-child(1) {
+  position: relative;
+  padding: 22px 18px 24px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8f7ff 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* coloured strip on top of the form */
+.goals-grid .left-column > :nth-child(1)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #8d9ff3, #b588c6, #f08fb5);
+}
+
+.goals-grid .left-column > :nth-child(1) h2,
+.goals-grid .left-column > :nth-child(1) h3 {
+  margin: 0 0 2px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text-dark);
+}
+
+.goals-grid .left-column > :nth-child(1) p {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.goals-grid .left-column > :nth-child(1) label {
+  display: block;
+  margin: 12px 0 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #33334d;
+}
+
+.goals-grid .left-column > :nth-child(1) input:not([type="checkbox"]),
+.goals-grid .left-column > :nth-child(1) textarea,
+.goals-grid .left-column > :nth-child(1) select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  background: #ffffff;
+  border: 1.5px solid #dcdcec;
+  border-radius: 10px;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--text-dark);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.goals-grid .left-column > :nth-child(1) input::placeholder,
+.goals-grid .left-column > :nth-child(1) textarea::placeholder {
+  color: #a3a3b8;
+}
+
+.goals-grid .left-column > :nth-child(1) input:focus,
+.goals-grid .left-column > :nth-child(1) textarea:focus,
+.goals-grid .left-column > :nth-child(1) select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(124, 92, 240, 0.15);
+}
+
+.goals-grid .left-column > :nth-child(1) input[type="checkbox"] {
+  accent-color: var(--primary);
+  width: 16px;
+  height: 16px;
+}
+
+.goals-grid .left-column > :nth-child(1) button[type="submit"] {
+  display: block;
+  margin: 20px auto 0;
+  padding: 11px 34px;
+  background: linear-gradient(135deg, #8d9ff3, #a77bd6);
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(124, 92, 240, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.goals-grid .left-column > :nth-child(1) button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(124, 92, 240, 0.38);
+  filter: brightness(1.05);
+}
+
+.goals-grid .left-column > :nth-child(1) button[type="submit"]:active {
+  transform: scale(0.97);
+}
+
+.goals-grid .left-column > :nth-child(1) button[type="submit"]:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* =========================
+   Tables (Active + Archive)
+   .goals-table is also used on the dashboard page, so
+   everything it sets there is reset here
+========================= */
+.goals-grid .table-container {
   width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 2px 4px 6px;
+  margin: 0 -4px;
+  scrollbar-width: thin;
+  scrollbar-color: #cfc9ee transparent;
 }
 
-.goals-table {
+.goals-grid .table-container::-webkit-scrollbar {
+  height: 6px;
+}
+.goals-grid .table-container::-webkit-scrollbar-thumb {
+  background: #cfc9ee;
+  border-radius: 999px;
+}
+
+.goals-grid .goals-table {
   width: 100%;
+  min-width: 540px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  font-family: inherit;
   border-collapse: separate;
   border-spacing: 0 10px;
-  margin-top: 12px;
-  table-layout: fixed; /* Ensures clean column proportions */
+  table-layout: fixed;
 }
 
-.goals-table thead th {
+.goals-grid .goals-table thead {
+  background: transparent;
+}
+
+.goals-grid .goals-table thead th {
+  padding: 0 10px 2px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #8a8aa3;
+}
+
+.goals-grid .goals-table tbody tr {
+  background: transparent;
+  box-shadow: var(--shadow-sm);
+  border-radius: 14px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.goals-grid .goals-table tbody tr:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(124, 92, 240, 0.16);
+}
+
+.goals-grid .goals-table tbody td {
+  padding: 16px 10px;
+  background: #ffffff;
   text-align: left;
   font-size: 13px;
-  font-weight: 600;
-  color: var(--text-muted);
-  padding: 0 12px;
-}
-
-.goals-table tbody tr {
-  background: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-  transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
-}
-
-.goals-table tbody tr:hover {
-  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.08);
-}
-
-.goals-table tbody td {
-  padding: 16px 12px;
-  font-size: 14px;
   color: var(--text-dark);
   vertical-align: middle;
-  word-break: break-word; /* Prevents overflow from long words */
+  word-break: break-word;
+  border-top: 1px solid #f0f0f8;
+  border-bottom: 1px solid #f0f0f8;
 }
 
-.goals-table tbody tr td:first-child {
+.goals-grid .goals-table tbody td:first-child {
+  padding-left: 16px;
+  border-left: 4px solid #a79de0; /* accent edge */
   border-top-left-radius: 14px;
   border-bottom-left-radius: 14px;
 }
 
-.goals-table tbody tr td:last-child {
+.goals-grid .goals-table tbody td:last-child {
+  padding-right: 16px;
+  border-right: 1px solid #f0f0f8;
   border-top-right-radius: 14px;
   border-bottom-right-radius: 14px;
 }
 
-/* Long text handling inside table cells */
+.goals-grid .goals-table tbody tr:hover td:first-child {
+  border-left-color: var(--primary);
+}
+
+/* empty-state row */
+.goals-grid .goals-table td.muted.center {
+  padding: 28px 10px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-muted);
+  border-left: none;
+}
+
 .truncate-cell {
   max-width: 180px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--text-muted);
 }
 
-/* =========================
-   Goal Title Button
-========================= */
+/* Goal title button */
 .row-btn {
   all: unset;
-  display: block;
+  display: -webkit-box;
   width: 100%;
-  font-weight: 500;
+  text-align: left;
+  font-weight: 600;
   color: var(--text-dark);
   cursor: pointer;
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* Limits long titles to 2 lines cleanly */
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.4;
+  transition: color 0.2s ease;
 }
 
 .row-btn:hover {
   color: var(--primary);
 }
 
+.row-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
 /* =========================
-   Status Pills
+   Status pills
 ========================= */
-.status {
-  padding: 6px 12px;
+.goals-grid .status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
   border-radius: 999px;
   font-size: 12px;
-  font-weight: 500;
-  display: inline-block;
+  font-weight: 600;
   text-transform: capitalize;
-}
-
-.status.active {
   background: var(--primary-soft);
-  color: var(--primary);
+  color: var(--primary-dark);
 }
 
-.status.completed {
-  background: #ecfdf5;
-  color: #10b981;
+.goals-grid .status::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.goals-grid .status.completed {
+  background: var(--ok-soft);
+  color: #0b8a63;
 }
 
 /* =========================
-   Action Buttons
+   Action buttons (Streak / Edit)
 ========================= */
 .streak-btn,
 .edit-btn {
-  padding: 6px 14px;
-  font-size: 13px;
-  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 600;
   border: none;
+  border-radius: 999px;
   cursor: pointer;
-  background: #f3f4f6;
-  color: var(--text-dark);
-  font-weight: 500;
-  transition: all 0.2s ease;
+  background: var(--chip-bg);
+  color: var(--chip-text);
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.streak-btn::before {
+  content: "🔥 ";
 }
 
 .streak-btn:hover,
 .edit-btn:hover {
-  background: var(--primary-soft);
-  color: var(--primary);
+  background: var(--chip-text);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.streak-btn:focus-visible,
+.edit-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 /* =========================
-   Summary Card (Right Column)
+   Goal Summary
 ========================= */
-.summary-card {
-  background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%);
-  border: 1px solid #e0e7ff;
+.goals-grid .summary-card {
+  padding: 22px 18px 24px;
+  background: linear-gradient(145deg, #e8ebfb 0%, #f3e9fa 100%);
+  border: 1px solid #dfe0f5;
+  border-radius: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.goals-grid .summary-card > h3 {
+  margin-bottom: 14px;
 }
 
 .summary-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 16px;
-  font-size: 15px;
+  margin-top: 10px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 12px;
+  font-size: 14px;
   color: var(--text-dark);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.summary-item:hover {
+  transform: translateX(3px);
+  background: #ffffff;
 }
 
 .summary-item b {
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 700;
 }
 
-/* =========================
-   Dots
-========================= */
 .dot {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   display: inline-block;
-  margin-right: 8px;
+  margin-right: 10px;
+  vertical-align: middle;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.8);
 }
 
 .dot.blue {
-  background: #6366f1;
+  background: #8f9ae0;
 }
-
 .dot.green {
-  background: #22c55e;
+  background: #3ddc97;
 }
-
 .dot.red {
-  background: #ef4444;
+  background: var(--danger);
 }
 
 /* =========================
-   Error Message
+   Error message
 ========================= */
 .error {
-  margin: 24px;
-  padding: 14px;
-  background: #fee2e2;
-  color: #b91c1c;
+  margin: 0 16px 24px;
+  padding: 14px 16px;
+  background: #fff1f2;
+  color: #b42339;
+  border: 1px solid #ffd0d6;
+  border-left: 4px solid var(--danger);
   border-radius: 12px;
   font-size: 14px;
   font-weight: 500;
 }
 
 /* =========================
-   Responsive Design
+   TABLET (>= 768px)
+   form | summary on top, tables full width below
 ========================= */
-@media (max-width: 1024px) {
+@media (min-width: 768px) {
   .goals-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 24px;
+    padding: 24px;
   }
 
-  .right-column {
-    order: -1;
-  }
-}
-
-@media (max-width: 640px) {
-  .goals-grid {
-    padding: 16px;
-    gap: 16px;
+  .goals-grid .left-column > :nth-child(n + 2) {
+    grid-column: 1 / -1;
+    padding: 26px 28px;
   }
 
-  .card {
-    padding: 18px;
+  .goals-grid .card > h3 {
+    font-size: 19px;
   }
 
-  .goals-table {
-    table-layout: auto;
+  .goals-grid .card .muted {
+    font-size: 14px;
   }
 
-  .goals-table thead {
-    display: none;
+  .goals-grid .left-column > :nth-child(1) {
+    padding: 30px 28px 32px;
   }
 
-  .goals-table tbody tr {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 16px;
+  .goals-grid .left-column > :nth-child(1) h2,
+  .goals-grid .left-column > :nth-child(1) h3 {
+    font-size: 22px;
   }
 
-  .goals-table tbody td {
-    padding: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .goals-grid .left-column > :nth-child(1) p {
+    font-size: 15px;
   }
 
-  .goals-table tbody td::before {
-    content: attr(data-label);
-    font-weight: 600;
-    color: var(--text-muted);
+  .goals-grid .left-column > :nth-child(1) label {
+    font-size: 13px;
+  }
+
+  .goals-grid .left-column > :nth-child(1) input:not([type="checkbox"]),
+  .goals-grid .left-column > :nth-child(1) textarea,
+  .goals-grid .left-column > :nth-child(1) select {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .goals-grid .summary-card {
+    padding: 28px 24px 32px;
+  }
+
+  .summary-item {
+    padding: 14px 16px;
+    font-size: 15px;
+  }
+
+  .goals-grid .goals-table {
+    min-width: 0;
+    border-spacing: 0 12px;
+  }
+
+  .goals-grid .goals-table thead th {
     font-size: 12px;
   }
 
+  .goals-grid .goals-table tbody td {
+    padding: 18px 12px;
+    font-size: 14px;
+  }
+
+  .streak-btn,
+  .edit-btn {
+    padding: 7px 18px;
+    font-size: 13px;
+  }
+}
+
+/* =========================
+   DESKTOP (>= 1100px)
+========================= */
+@media (min-width: 1100px) {
+  .goals-grid {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 28px;
+    padding: 32px;
+  }
+
+  .goals-grid .left-column > :nth-child(n + 2) {
+    padding: 30px 36px;
+  }
+
+  .goals-grid .goals-table tbody td {
+    font-size: 15px;
+  }
+
+  .goals-grid .status {
+    font-size: 13px;
+  }
+}
+
+/* =========================
+   SMALL PHONES (< 640px)
+   tables scroll sideways so rows stay intact
+========================= */
+@media (max-width: 639px) {
+  .goals-grid {
+    padding: 10px;
+    gap: 14px;
+  }
+
+  .goals-grid .card {
+    padding: 16px 12px;
+  }
+
+  .goals-grid .left-column > :nth-child(1) {
+    padding: 20px 14px;
+  }
+
+  .goals-grid .left-column > :nth-child(1) input:not([type="checkbox"]),
+  .goals-grid .left-column > :nth-child(1) textarea,
+  .goals-grid .left-column > :nth-child(1) select {
+    min-width: 0;
+  }
+
+  .goals-grid .date-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .goals-grid .goals-table {
+    min-width: 500px;
+  }
+
   .truncate-cell {
-    max-width: 100%;
-    white-space: normal;
+    max-width: 120px;
   }
 }

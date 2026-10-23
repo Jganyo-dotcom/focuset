@@ -1,3 +1,124 @@
+// import { useState, useRef, useEffect } from "react";
+// import { Link, useLocation } from "react-router-dom";
+// import "./navbar.css";
+// import logo from "../assets/images/logo.png";
+
+// export default function Navbar() {
+//   const [open, setOpen] = useState(false);
+//   const navbarRef = useRef(null);
+//   const location = useLocation();
+
+//   /* HIDE NAVBAR ON DASHBOARD PAGES */
+//   const hideNavbarRoutes = [
+//     "/dashboard",
+//     "/goals",
+//     "/progress",
+//     "/settings",
+//     "/profile",
+//   ];
+
+//   if (hideNavbarRoutes.some((path) => location.pathname.startsWith(path))) {
+//     return null;
+//   }
+
+//   /* CLOSE MENU WHEN CLICKING OUTSIDE */
+//   useEffect(() => {
+//     const handleClickOutside = (e) => {
+//       if (navbarRef.current && !navbarRef.current.contains(e.target)) {
+//         setOpen(false);
+//       }
+//     };
+
+//     if (open) {
+//       document.addEventListener("mousedown", handleClickOutside);
+//     }
+
+//     return () => {
+//       document.removeEventListener("mousedown", handleClickOutside);
+//     };
+//   }, [open]);
+
+//   const closeMenu = () => setOpen(false);
+
+//   return (
+//     <nav className="navbar" ref={navbarRef}>
+//       {/* LOGO */}
+//       <div className="navbar-left">
+//         <Link to="/" onClick={closeMenu}>
+//           <img src={logo} alt="Focuset logo" className="logo" />
+//         </Link>
+//       </div>
+
+//       {/* DESKTOP LINKS */}
+//       <div className="navbar-right">
+//         <ul className="nav-links">
+//           <li>
+//             <Link to="/" onClick={closeMenu}>
+//               Home
+//             </Link>
+//           </li>
+//           <li>
+//             <Link to="/dashboard" onClick={closeMenu}>
+//               Dashboard
+//             </Link>
+//           </li>
+//           <li>
+//             <Link to="/goals" onClick={closeMenu}>
+//               Goals
+//             </Link>
+//           </li>
+//           <li>
+//             <Link to="/progress" onClick={closeMenu}>
+//               Progress
+//             </Link>
+//           </li>
+//           <li>
+//             <Link to="/signin" onClick={closeMenu}>
+//               Sign In
+//             </Link>
+//           </li>
+//           <li>
+//             <Link to="/signup" className="signup-btn" onClick={closeMenu}>
+//               Sign Up
+//             </Link>
+//           </li>
+//         </ul>
+//       </div>
+
+//       {/* HAMBURGER (Moved out of navbar-right to stay on the far edge) */}
+//       <button
+//         className="navbar-hamburger"
+//         aria-label="Toggle menu"
+//         onClick={() => setOpen(!open)}
+//       >
+//         ☰
+//       </button>
+
+//       {/* MOBILE MENU */}
+//       <div className={`navbar-mobile-menu ${open ? "open" : ""}`}>
+//         <Link to="/" onClick={closeMenu}>
+//           Home
+//         </Link>
+//         <Link to="/dashboard" onClick={closeMenu}>
+//           Dashboard
+//         </Link>
+//         <Link to="/goals" onClick={closeMenu}>
+//           Goals
+//         </Link>
+//         <Link to="/progress" onClick={closeMenu}>
+//           Progress
+//         </Link>
+//         <Link to="/signin" onClick={closeMenu}>
+//           Sign In
+//         </Link>
+//         <Link to="/signup" onClick={closeMenu} className="signup-btn">
+//           Sign Up
+//         </Link>
+//       </div>
+//     </nav>
+//   );
+// }
+
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./navbar.css";
@@ -17,9 +138,9 @@ export default function Navbar() {
     "/profile",
   ];
 
-  if (hideNavbarRoutes.some((path) => location.pathname.startsWith(path))) {
-    return null;
-  }
+  const hideNavbar = hideNavbarRoutes.some((path) =>
+    location.pathname.startsWith(path)
+  );
 
   /* CLOSE MENU WHEN CLICKING OUTSIDE */
   useEffect(() => {
@@ -40,6 +161,11 @@ export default function Navbar() {
 
   const closeMenu = () => setOpen(false);
 
+  // Early return only AFTER all hooks have been called
+  if (hideNavbar) {
+    return null;
+  }
+
   return (
     <nav className="navbar" ref={navbarRef}>
       {/* LOGO */}
@@ -51,13 +177,14 @@ export default function Navbar() {
 
       {/* DESKTOP LINKS */}
       <div className="navbar-right">
+        {/* CENTER LINKS */}
         <ul className="nav-links">
           <li>
             <Link to="/" onClick={closeMenu}>
               Home
             </Link>
           </li>
-          <li>
+          <li className="nav-dashboard">
             <Link to="/dashboard" onClick={closeMenu}>
               Dashboard
             </Link>
@@ -72,23 +199,28 @@ export default function Navbar() {
               Progress
             </Link>
           </li>
+        </ul>
+
+        {/* AUTH LINKS */}
+        <ul className="nav-auth">
           <li>
-            <Link to="/signin" onClick={closeMenu}>
-              Sign In
+            <Link to="/signup" onClick={closeMenu}>
+              Sign-up
             </Link>
           </li>
           <li>
-            <Link to="/signup" className="signup-btn" onClick={closeMenu}>
-              Sign Up
+            <Link to="/signin" className="signin-btn" onClick={closeMenu}>
+              Sign-in
             </Link>
           </li>
         </ul>
       </div>
 
-      {/* HAMBURGER (Moved out of navbar-right to stay on the far edge) */}
+      {/* HAMBURGER */}
       <button
         className="navbar-hamburger"
         aria-label="Toggle menu"
+        aria-expanded={open}
         onClick={() => setOpen(!open)}
       >
         ☰
@@ -108,11 +240,11 @@ export default function Navbar() {
         <Link to="/progress" onClick={closeMenu}>
           Progress
         </Link>
-        <Link to="/signin" onClick={closeMenu}>
-          Sign In
+        <Link to="/signup" onClick={closeMenu}>
+          Sign-up
         </Link>
-        <Link to="/signup" onClick={closeMenu} className="signup-btn">
-          Sign Up
+        <Link to="/signin" onClick={closeMenu} className="signin-btn">
+          Sign-in
         </Link>
       </div>
     </nav>

@@ -48,7 +48,7 @@ export default function Sidebar({ isOpen, onClose }) {
         <div className="sidebar-top-section">
           <div className="sidebar-header">
             <img src={logo} alt="Focuset logo" className="sidebar-logo" />
-            <p className="sidebar-tagline">Track your focus effortlessly</p>
+            <p className="sidebar-tagline">Build consistent learning habits</p>
           </div>
 
           <nav className="nav">

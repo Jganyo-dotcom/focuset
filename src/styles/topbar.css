@@ -1,71 +1,39 @@
 .topbar {
   height: 72px;
+  padding: 0 32px;
+  display: flex;
+
+
   background: #ffffff;
-  display: flex;
-  justify-content: space-between;
- 
-  padding: 0 24px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.topbar-left {
-  display: flex;
-  align-items: center;
- 
-}
-
+/* MENU BUTTON */
 .menu-btn {
   display: none;
-  font-size: 24px;
   background: none;
   border: none;
+  font-size: 22px;
   cursor: pointer;
 }
 
-.search-input {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  outline: none;
-}
-
-/* Right side */
-.topbar-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.avatar {
-  font-size: 24px;
-}
-
-/* Responsive */
+/* SHOW MENU BUTTON ON SMALL SCREENS */
 @media (max-width: 1024px) {
   .menu-btn {
-    display: inline-block;
-  }
-
-  .search-input {
-    width: 180px;
+    display: block;
   }
 }
 
-@media (max-width: 768px) {
-  .search-input {
-    display: none;
-  }
-
-  .topbar {
-    padding: 0 16px;
-  }
+.search-input {
+  flex: 1;
+  max-width: 420px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
 }
 
-@media (max-width: 767px) {
-  .topbar-left {
-    gap: 8px;
-  }
-  .search-input {
-    width: 140px;
-  }
+.user-info {
+  margin-left: auto;
+  font-size: 14px;
+  color: #374151;
 }

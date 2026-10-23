@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function ProtectedRoute({ children }) {
@@ -18,5 +18,5 @@ export default function ProtectedRoute({ children }) {
   }
 
   // 3. Verified -> render layout dashboard elements safely
-  return children;
+  return children ?? <Outlet />;
 }

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { lazy, Suspense } from "react";
-
 const StudyBarChart = lazy(() => import("../components/StudyBarChart"));
 const ProgressDonut = lazy(() => import("../components/ProgressDonut"));
 import {
@@ -12,6 +11,7 @@ import {
 import "../styles/dashboard.css";
 import heroImg from "../assets/images/hero-card.png";
 import studyImg from "../assets/images/study-illustration.png";
+import { Form } from "react-router-dom";
 
 export default function Dashboard() {
   const [goal, setGoal] = useState(goalData);
@@ -61,7 +61,7 @@ export default function Dashboard() {
 
       {/* STREAK */}
       <section className="streak">
-        <h2>🔥 5 days</h2>
+        <h2>5 days 🔥</h2>
         <p>You’ve studied consistently for 5 days.</p>
       </section>
 

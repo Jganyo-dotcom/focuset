@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import "../styles/topbar.css";
 
 export default function Topbar({ onMenuClick }) {
+  const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [search, setSearch] = useState("");
@@ -40,14 +42,15 @@ export default function Topbar({ onMenuClick }) {
           ☰
         </button>
 
-        {/* SEARCH */}
-        <input
-          type="text"
-          className="search-input"
-          placeholder="Search goals..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        {pathname === "/goals" && (
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search goals..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        )}
       </div>
 
       <div className="topbar-right">
@@ -55,7 +58,6 @@ export default function Topbar({ onMenuClick }) {
           <span className="welcome">
             {user ? `Welcome back, ${user.username}` : "Welcome"}
           </span>
-          <span className="avatar">👤</span>
         </div>
       </div>
     </header>

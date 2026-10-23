@@ -1,39 +1,41 @@
 :root {
-  --sidebar-width: 260px;
-  --sidebar-bg: #ffffff;
-  --text-dark: #111827;
-  --text-muted: #6b7280;
-  --active-gray-bg: #f3f4f6;
+  --sidebar-width: 260px; /* keeps your layout's content offset unchanged */
+  --sidebar-bg: #f6f6fa;
+  --text-dark: #111111;
+  --text-muted: #111111;
+  --active-gray-bg: #ebe8fa;
+  --active-ring: #5b4bb8;
 }
 
-/* Base resets specifically targeted inside our sidebar portal scope */
 .sidebar,
 .sidebar * {
   box-sizing: border-box;
 }
 
 /* =========================================================
-   MOBILE / TABLET VIEWP_ORTS (Default State)
+   FLOATING CARD (default / mobile drawer)
    ========================================================= */
 .sidebar {
-  width: var(--sidebar-width);
-  height: 100vh;
-  background: var(--sidebar-bg);
   position: fixed;
-  top: 0;
-  /* 🚀 Hide completely off-screen to the left on small screens */
-  left: calc(var(--sidebar-width) * -1);
-  z-index: 3000; /* Stays above your content layout canvas */
+  top: 12px;
+  /* parked off-screen to the left (card width = sidebar width - 24px) */
+  left: calc(var(--sidebar-width) * -1 - 24px);
+  width: calc(var(--sidebar-width) - 24px);
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+  z-index: 3000;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  padding: 22px 16px 16px;
+  background: var(--sidebar-bg);
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(60, 50, 120, 0.14);
   transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
 }
 
-/* Triggered on mobile when the hamburger menu is clicked */
 .sidebar.open {
-  left: 0;
+  left: 12px;
 }
 
 .sidebar-top-section {
@@ -42,113 +44,151 @@
   width: 100%;
 }
 
-/* Branding layouts */
+/* ---------- Branding ---------- */
 .sidebar-header {
-  padding: 32px 24px 16px;
+  padding: 0 4px 6px;
   text-align: center;
 }
 
 .sidebar-logo {
-  height: 32px;
+  display: block;
+  height: 44px;
   width: auto;
   object-fit: contain;
-  margin-bottom: 8px;
+  margin: 0 auto 12px;
 }
 
 .sidebar-tagline {
-  font-size: 13px;
+  max-width: 130px;
+  margin: 0 auto;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.35;
   color: var(--text-muted);
-  line-height: 1.4;
 }
 
-/* Navigation lists */
+/* ---------- Navigation ---------- */
 .nav {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 16px;
+  align-items: center;
+  gap: 12px;
   width: 100%;
+  padding: 18px 0 0;
 }
 
 .nav-link {
+  position: relative;
   width: 100%;
-  text-align: left;
-  padding: 12px 20px;
-  font-size: 15px;
+  max-width: 150px;
+  padding: 8px 14px;
+  text-align: center;
+  font-size: 14px;
   font-weight: 500;
+  line-height: 1.2;
   color: var(--text-dark);
   text-decoration: none;
-  border-radius: 12px;
-  transition: all 0.2s ease;
+  background: transparent;
+  border: 1.5px solid transparent; /* reserves space so the active ring doesn't shift layout */
+  border-radius: 999px;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .nav-link:hover {
-  background: #f9fafb;
+  background: rgba(139, 133, 148, 0.12);
 }
 
-/* Active navigation item with clean gray background style */
-.nav-link.active {
-  background: var(--active-gray-bg) !important;
-  color: var(--text-dark) !important;
-  font-weight: 600;
+.nav-link:focus-visible {
+  outline: 2px solid var(--active-ring);
+  outline-offset: 2px;
 }
 
-/* Bottom Logout elements */
+/* Active item: outlined lavender pill */
+.nav-link.active,
+.nav-link.active:hover {
+  background: var(--active-gray-bg);
+  border-color: var(--active-ring);
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+/* Divider line above "Settings" (5th link), running edge to edge of the card */
+.nav-link:nth-child(5) {
+  margin-top: 10px;
+}
+
+.nav-link:nth-child(5)::before {
+  content: "";
+  position: absolute;
+  top: -11px;
+  left: -24px;
+  right: -24px;
+  height: 1px;
+  background: #3a3a44;
+  pointer-events: none;
+}
+
+/* ---------- Sign-out (plain text, as in the design) ---------- */
 .sidebar-footer {
-  padding: 20px 16px;
   width: 100%;
+  padding: 12px 0 0;
+  display: flex;
+  justify-content: center;
 }
 
 .logout-btn {
   width: 100%;
-  background: #ef4444 !important; /* Vibrant Red Background */
-  color: #111827 !important; /* Solid Black Font Color */
-  border: none !important;
-  padding: 14px 0 !important;
-  font-size: 15px;
-  font-weight: 600 !important;
-  border-radius: 12px !important;
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
-  cursor: pointer;
+  max-width: 150px;
+  padding: 8px 14px;
+  background: transparent;
+  color: var(--text-dark);
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  box-shadow: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
   text-align: center;
-  display: block;
-  transition: background-color 0.2s ease;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .logout-btn:hover {
-  background: #dc2626 !important; /* Rich darker red tone on click action */
+  background: rgba(239, 68, 68, 0.1);
+  color: #c62828;
 }
 
-/* Backdrop Dim Overlay Mask */
+.logout-btn:focus-visible {
+  outline: 2px solid var(--active-ring);
+  outline-offset: 2px;
+}
+
+/* ---------- Backdrop (mobile drawer) ---------- */
 .sidebar-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.4); /* Modern dark translucent slate mask */
+  background: rgba(15, 23, 42, 0.4);
   backdrop-filter: blur(4px);
-  z-index: 2900; /* Sits right beneath the mobile sidebar container */
+  z-index: 2900;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
 }
 
-/* Overlay becomes active on click events */
 .sidebar-overlay.active {
   opacity: 1;
   pointer-events: auto;
 }
 
 /* =========================================================
-   DESKTOP BIG SCREEN VIEWP_ORTS (Overriding Mobile Styles)
+   DESKTOP (>= 1025px): card is always visible
    ========================================================= */
 @media (min-width: 1025px) {
   .sidebar {
-    /* 🚀 Forces sidebar to stay pinned to the screen permanently */
-    left: 0 !important;
-    box-shadow: 1px 0 0px rgba(0, 0, 0, 0.05); /* Standard minimal layout separator line */
-    border-right: 1px solid #e5e7eb;
+    left: 12px !important;
   }
 
-  /* Completely hides the dark background backdrop since the sidebar doesn't overlay on desktop */
   .sidebar-overlay {
     display: none !important;
     pointer-events: none !important;

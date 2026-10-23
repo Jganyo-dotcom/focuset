@@ -2,11 +2,13 @@
    VARIABLES
 ================================ */
 :root {
-  --sidebar-width: 260px;
-  --topbar-height: 72px;
-  --page-bg: #f9fafb;
-  --sidebar-bg: #ffffff;
-  --shadow: rgba(0, 0, 0, 0.08);
+  --sidebar-width: 260px; /* same value as sidebar.css */
+  --topbar-height: 60px;
+  --page-bg-top: #e9ebf8;
+  --page-bg-bottom: #d9def6;
+  --main-bg: #f4f4fa;
+  --topbar-bg: #ebebf5;
+  --topbar-border: #d3d7ee;
 }
 
 /* ==============================
@@ -15,170 +17,204 @@
 .dashboard-layout {
   display: flex;
   min-height: 100vh;
-  background: var(--page-bg);
-  position: relative;
   width: 100%;
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    var(--page-bg-top) 0%,
+    var(--page-bg-bottom) 100%
+  );
 }
+
+/* The sidebar's look and its open/close behaviour live in sidebar.css. */
 
 /* ==============================
-   SIDEBAR STRUCTURAL ALIGNMENT
-================================ */
-.sidebar {
-  width: var(--sidebar-width);
-  background: var(--sidebar-bg);
-  box-shadow: 2px 0 12px var(--shadow);
-  position: fixed;
-  top: 0;
-  left: calc(
-    var(--sidebar-width) * -1
-  ); /* 🚀 FIX: Hidden cleanly left instead of broken transforms */
-  height: 100vh !important; /* 🚀 FIX: Spans top to down completely */
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: space-between !important;
-  transition: left 0.3s ease;
-  z-index: 3000; /* Stays above topbar on mobile */
-}
-
-/* Triggered on mobile when the hamburger menu is clicked */
-.sidebar.open {
-  left: 0 !important;
-}
-
-/* Desktop Fix: Keeps it locked open safely on big screens */
-@media (min-width: 1025px) {
-  .sidebar {
-    left: 0 !important;
-    box-shadow: 1px 0 0 rgba(0, 0, 0, 0.05);
-  }
-}
-
-/* ==============================
-   MAIN AREA
+   MAIN AREA (no outer padding, so the topbar can sit flush)
 ================================ */
 .dashboard-main {
   flex: 1;
-  margin-left: var(--sidebar-width); /* Reserves space for desktop sidebar */
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  min-width: 0;
-}
-
-/* Mobile layout reset */
-@media (max-width: 1024px) {
-  .dashboard-main {
-    margin-left: 0; /* Clears sidebar space on smaller viewports */
-  }
+  margin-left: var(--sidebar-width); /* room for the floating sidebar card */
+  padding: 0;
+  box-sizing: border-box;
+  background: var(--main-bg);
 }
 
 /* ==============================
-   TOPBAR
+   TOPBAR (flush with the top and sides, border line underneath)
 ================================ */
 .topbar {
-  height: var(--topbar-height);
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 24px;
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: var(--topbar-height);
+  margin: 0;
+  padding: 0 24px;
+  background: var(--topbar-bg);
+  border: none;
+  border-bottom: 1px solid var(--topbar-border);
+  border-radius: 0;
+  box-shadow: 0 1px 4px rgba(60, 50, 120, 0.06);
+  box-sizing: border-box;
 }
 
 .topbar-left {
   display: flex;
   align-items: center;
+  flex: 1;
+  min-width: 0;
 }
 
+/* hamburger: only shown when the sidebar is a drawer */
 .menu-btn {
   display: none;
-  font-size: 24px;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin-right: 8px;
+  padding: 0;
+  font-size: 22px;
+  line-height: 1;
+  color: #111;
   background: none;
   border: none;
-  cursor: pointer;
-  padding: 8px;
-  margin-right: 8px;
-}
-
-.search-input {
-  padding: 8px 12px;
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  outline: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 
-/* Right side elements */
+.menu-btn:hover {
+  background: rgba(139, 133, 148, 0.16);
+}
+
+/* white search pill */
+.search-input {
+  width: 100%;
+  max-width: 300px;
+  height: 36px;
+  padding: 0 12px;
+  font-family: inherit;
+  font-size: 12px;
+  color: #111;
+  background: #ffffff;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-input::placeholder {
+  color: #6b7280;
+}
+
+.search-input:focus {
+  border-color: #8d9ff3;
+  box-shadow: 0 0 0 3px rgba(141, 159, 243, 0.25);
+}
+
+/* right side: welcome text, avatar, bell */
 .topbar-right {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: #111;
 }
 
-.avatar {
-  font-size: 24px;
+.topbar-right button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  font-size: 18px;
+  line-height: 1;
+  color: #111;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 
-/* Responsive adjustments */
-@media (max-width: 1024px) {
-  .menu-btn {
-    display: inline-block; /* Shows your hamburger menu button */
-  }
-
-  .search-input {
-    width: 180px;
-  }
-}
-
-@media (max-width: 768px) {
-  .search-input {
-    display: none;
-  }
-
-  .topbar {
-    padding: 0 16px;
-  }
-}
-
-@media (max-width: 767px) {
-  .topbar-left {
-    gap: 8px;
-  }
+.topbar-right button:hover {
+  background: rgba(139, 133, 148, 0.16);
 }
 
 /* ==============================
    CONTENT AREA WORKSPACE
+   (carries the spacing the main area used to have)
 ================================ */
 .dashboard-content {
   flex: 1;
-  padding: 24px;
-  overflow-y: auto;
   width: 100%;
+  min-width: 0;
+  padding: 16px;
+  box-sizing: border-box;
 }
 
 /* ==============================
-   OVERLAY (Mobile Backdrop Mask)
+   RESPONSIVE
 ================================ */
-.sidebar-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 2000;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
+
+/* Tablet and below: sidebar becomes a drawer */
+@media (max-width: 1024px) {
+  .dashboard-main {
+    margin-left: 0;
+  }
+
+  .menu-btn {
+    display: inline-flex;
+  }
+
+  .search-input {
+    max-width: 240px;
+  }
 }
 
-/* 🚀 FIX: Overlay animation maps directly to layout states */
-.sidebar-overlay.active {
-  opacity: 1;
-  pointer-events: auto;
+/* Phones */
+@media (max-width: 767px) {
+  .topbar {
+    height: 56px;
+    padding: 0 12px;
+  }
+
+  .search-input {
+    max-width: none;
+  }
+
+  .topbar-right {
+    gap: 6px;
+  }
+
+  .dashboard-content {
+    padding: 10px;
+  }
 }
 
-@media (min-width: 1025px) {
-  .sidebar-overlay {
-    display: none !important; /* Hard-kill on desktops */
+/* Very small phones: search is hidden to leave room */
+@media (max-width: 479px) {
+  .search-input {
+    display: none;
+  }
+}
+
+/* Large desktops */
+@media (min-width: 1280px) {
+  .topbar {
+    padding: 0 32px;
+  }
+
+  .dashboard-content {
+    padding: 20px 32px;
   }
 }

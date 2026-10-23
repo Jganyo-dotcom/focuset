@@ -1,188 +1,365 @@
-/* ===============================
-   PAGE LAYOUT
-================================ */
-
+/* =========================================
+   PAGE (mobile first, matches the design)
+   ========================================= */
 .progress-page {
-  padding: 32px;
-  background: #f8fafc;
+  --pg-bg: #f7f7fb;
+  --pg-panel: #eceef9;
+  --pg-card: #ffffff;
+  --pg-tab: #efeff6;
+  --pg-mauve: #8b8594;
+  --pg-primary: #7c5cf0;
+  --pg-gray: #c3c3ca;
+  --pg-green: #3ddc9f;
+  --pg-green-dark: #22c48a;
+  --pg-text: #1b1b2f;
+  --pg-muted: #6b7280;
+  --pg-line: #e6e6ef;
+  --pg-shadow-sm: 0 2px 10px rgba(40, 30, 90, 0.07);
+  --pg-shadow-md: 0 12px 28px rgba(40, 30, 90, 0.13);
+
+  /* heatmap shades: all three use the same green, as in the design.
+     Give them different shades here if you want intensity to show again */
+  --heat-low: var(--pg-green);
+  --heat-medium: var(--pg-green);
+  --heat-high: var(--pg-green);
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  padding: 12px 10px 40px;
+  box-sizing: border-box;
   min-height: 100vh;
+  color: var(--pg-text);
+  background:
+    radial-gradient(circle at 100% 0%, #ece6ff 0%, transparent 32%),
+    radial-gradient(circle at 0% 100%, #fde9f2 0%, transparent 30%),
+    var(--pg-bg);
+}
+
+/* lavender panel behind title + subtitle + streak card */
+.progress-page::before {
+  content: "";
+  grid-column: 1;
+  grid-row: 1 / 4;
+  background: linear-gradient(180deg, #eceef9 0%, #e4e7f8 100%);
+  border-radius: 14px;
+  z-index: 0;
+}
+
+.page-title,
+.subtitle,
+.progress-page .streak-card {
+  grid-column: 1;
+  position: relative;
+  z-index: 1;
 }
 
 .page-title {
-  font-size: 28px;
-  font-weight: 600;
-  margin-bottom: 6px;
+  grid-row: 1;
+  margin: 16px 16px 2px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: #000;
 }
 
 .subtitle {
-  color: #6b7280;
-  margin-bottom: 28px;
-  font-size: 14px;
+  grid-row: 2;
+  margin: 0 16px 14px;
+  font-size: 11px;
+  color: #33334d;
 }
 
-/* ===============================
-   CARD STYLING
-================================ */
-
-.card {
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 28px;
-  margin-bottom: 32px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  transition: 0.3s ease;
+/* gentle entrance animation */
+@keyframes pg-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.card:hover {
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+.progress-page .streak-card,
+.progress-page .history-card,
+.progress-page .badges-card {
+  animation: pg-fade-up 0.5s ease both;
 }
 
-/* ===============================
-   STREAK HEADER
-================================ */
+.progress-page .history-card {
+  animation-delay: 0.1s;
+}
+
+.progress-page .badges-card {
+  animation-delay: 0.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-page .streak-card,
+  .progress-page .history-card,
+  .progress-page .badges-card,
+  .progress-page .badge {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* =========================================
+   CARDS (scoped so other pages' .card styles can't leak in)
+   ========================================= */
+.progress-page .card {
+  background: var(--pg-card);
+  border: 1px solid var(--pg-line);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: var(--pg-shadow-sm);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.progress-page .card:hover {
+  box-shadow: var(--pg-shadow-md);
+}
+
+/* =========================================
+   STUDY STREAK
+   ========================================= */
+.progress-page .streak-card {
+  grid-row: 3;
+  margin: 0 14px 14px;
+  padding: 16px 16px 14px;
+  overflow: hidden;
+}
+
+/* coloured strip across the top of the card */
+.progress-page .streak-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #8d9ff3, #b588c6, #f08fb5);
+}
 
 .streak-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #d3d3dc;
 }
 
-/* ===============================
-   SEGMENTED TABS
-================================ */
+.streak-header h3 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pg-text);
+}
 
+/* segmented tabs */
 .tabs {
-  background: #f3f4f6;
-  padding: 4px;
-  border-radius: 12px;
   display: flex;
   gap: 4px;
+  padding: 3px;
+  background: #f1f1f7;
+  border-radius: 10px;
 }
 
 .tabs button {
-  border: none;
+  padding: 6px 11px;
   background: transparent;
-  padding: 8px 16px;
-  border-radius: 10px;
-  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 500;
+  font-family: inherit;
+  color: #33334d;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .tabs button:hover {
-  background: #e5e7eb;
+  background: #e3e3ee;
 }
 
-.tabs .active {
-  background: #8b5cf6;
-  color: white;
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+.tabs .active,
+.tabs .active:hover {
+  background: linear-gradient(135deg, #9a94a6, #7d778a);
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(110, 100, 130, 0.35);
 }
 
-/* ===============================
-   STREAK BODY
-================================ */
+.tabs button:focus-visible {
+  outline: 2px solid var(--pg-primary);
+  outline-offset: 2px;
+}
 
 .streak-body {
   display: flex;
   justify-content: space-between;
-  margin-top: 24px;
+  align-items: flex-start;
   flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 16px;
 }
 
 .calendar-section {
-  flex: 1;
-  min-width: 260px;
+  flex: 1 1 190px;
+  max-width: 250px;
+  min-width: 0;
 }
 
-/* Weekday Labels */
 .week-labels {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  margin-bottom: 10px;
-  color: #6b7280;
-  font-size: 13px;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--pg-text);
   text-align: center;
 }
 
-/* Heatmap Grid */
 .streak-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 12px;
+  gap: 8px;
 }
 
-/* Heatmap Box */
-.streak-box {
-  height: 34px;
-  border-radius: 8px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+/* heatmap cell */
+.progress-page .streak-box {
+  aspect-ratio: 1 / 1;
+  height: auto;
+  border-radius: 7px;
   cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
 }
 
-.streak-box:hover {
-  transform: scale(1.15);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+.progress-page .streak-box:hover {
+  transform: scale(1.14);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+  filter: brightness(1.05);
+  position: relative;
+  z-index: 2;
 }
 
-/* Heatmap Colors */
-.empty {
-  background: #e5e7eb;
+.progress-page .streak-box.empty,
+.progress-page .legend-box.empty {
+  background: linear-gradient(145deg, #d0d0d6, #b9b9c0);
 }
 
-.low {
-  background: #facc15;
+.progress-page .streak-box.low,
+.progress-page .legend-box.low {
+  background: linear-gradient(145deg, var(--heat-low), #2fcf93);
 }
 
-.medium {
-  background: #2563eb;
+.progress-page .streak-box.medium,
+.progress-page .legend-box.medium {
+  background: linear-gradient(145deg, var(--heat-medium), #2fcf93);
 }
 
-.high {
-  background: #22c55e;
+.progress-page .streak-box.high,
+.progress-page .legend-box.high {
+  background: linear-gradient(145deg, var(--heat-high), #2fcf93);
 }
 
-/* ===============================
-   LEGEND
-================================ */
+/* blank cells that push day 1 under its weekday */
+.progress-page .streak-box.blank {
+  visibility: hidden;
+  pointer-events: none;
+}
 
+/* days that haven't happened yet */
+.progress-page .streak-box.future {
+  background: #ededf3;
+  border: 1px dashed #d4d4de;
+  box-sizing: border-box;
+  cursor: default;
+}
+
+.progress-page .streak-box.future:hover {
+  transform: none;
+  box-shadow: none;
+  filter: none;
+}
+
+/* legend */
 .legend-section {
-  margin-left: 40px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  font-size: 14px;
+  gap: 12px;
+  margin: 0 0 0 auto;
+  padding: 12px 14px;
+  background: #f7f7fb;
+  border: 1px solid var(--pg-line);
+  border-radius: 12px;
 }
 
-.legend-section div {
+.legend-section > div {
   display: flex;
   align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  line-height: 1.2;
+  color: var(--pg-text);
+  white-space: nowrap;
 }
 
-.legend-box {
-  width: 18px;
-  height: 18px;
+.progress-page .legend-box {
+  width: 20px;
+  height: 20px;
+  margin: 0;
   border-radius: 6px;
-  margin-right: 10px;
+  flex-shrink: 0;
 }
 
-/* ===============================
-   STREAK SUMMARY
-================================ */
-
+/* summary line as a soft pill */
 .streak-summary {
-  margin-top: 20px;
-  font-size: 14px;
-  color: #374151;
+  margin: 18px auto 0;
+  padding: 8px 16px;
+  width: fit-content;
+  max-width: 100%;
+  background: linear-gradient(135deg, #e6fbf3, #eef0fd);
+  border-radius: 999px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--pg-text);
 }
 
-/* ===============================
-   STUDY HISTORY TABLE
-================================ */
+.streak-summary strong {
+  font-weight: 700;
+}
 
-.history-card h3 {
-  margin-bottom: 18px;
+/* =========================================
+   STUDY HISTORY (floating tab label, light card)
+   ========================================= */
+.progress-page .history-card {
+  grid-column: 1;
+  grid-row: 4;
+  position: relative;
+  margin: 46px 14px 0;
+  padding: 12px 18px 10px;
+}
+
+.progress-page .history-card h3,
+.progress-page .badges-card h3 {
+  position: absolute;
+  top: -28px;
+  left: 0;
+  margin: 0;
+  padding: 7px 16px;
+  background: var(--pg-tab);
+  color: #222;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  border-radius: 9px 9px 0 0;
 }
 
 .history-card table {
@@ -191,103 +368,344 @@
 }
 
 .history-card th {
-  text-align: left;
-  font-size: 14px;
-  font-weight: 500;
-  color: #6b7280;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #f3f4f6;
+  padding: 6px 0 9px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pg-muted);
+  border-bottom: 1.5px solid #cfcfd9;
 }
 
 .history-card td {
-  padding: 14px 0;
-  border-bottom: 1px solid #f9fafb;
-  font-size: 14px;
-  color: #374151;
+  padding: 10px 0;
+  font-size: 12px;
+  color: var(--pg-text);
+  border-bottom: 1px solid var(--pg-line);
 }
 
-/* ===============================
-   BADGES SECTION
-================================ */
+.history-card tbody tr:last-child td {
+  border-bottom: none;
+}
 
-.badges-card h3 {
-  margin-bottom: 20px;
+.history-card th:nth-child(1),
+.history-card td:nth-child(1) {
+  text-align: left;
+}
+
+.history-card th:nth-child(2),
+.history-card td:nth-child(2) {
+  text-align: center;
+}
+
+.history-card th:nth-child(3),
+.history-card td:nth-child(3) {
+  text-align: right;
+}
+
+.history-card tbody tr {
+  transition: background 0.2s ease;
+}
+
+.history-card tbody tr:hover {
+  background: rgba(124, 92, 240, 0.06);
+}
+
+.history-card .empty-row:hover {
+  background: none;
+}
+
+.history-card .empty-row td {
+  padding: 22px 0;
+  text-align: center;
+  color: var(--pg-muted);
+}
+
+/* =========================================
+   BADGES (gray tiles with full-colour artwork)
+   ========================================= */
+.progress-page .badges-card {
+  grid-column: 1;
+  grid-row: 5;
+  position: relative;
+  margin: 46px 0 0;
+  padding: 14px;
 }
 
 .badge-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 16px 12px;
 }
 
-.badge {
-  background: #f9fafb;
-  border-radius: 20px;
-  padding: 28px;
-  text-align: center;
-  opacity: 0.5;
-  transform: scale(0.95);
-  transition: all 0.3s ease;
-  cursor: default;
-}
-
-.badge.unlocked {
+.progress-page .badge {
+  padding: 0;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
   opacity: 1;
-  transform: scale(1);
-  box-shadow: 0 12px 35px rgba(139, 92, 246, 0.25);
+  transform: none;
+  text-align: center;
+  cursor: default;
+  transition: transform 0.25s ease;
 }
 
-.badge:hover {
+.progress-page .badge:hover {
   transform: translateY(-5px);
 }
 
+/* gray tile, like the design */
 .badge-icon {
-  font-size: 48px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #dcdce0, #cfcfd4);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
 
-.badge p {
-  margin-top: 14px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
+.badge-icon svg {
+  width: 68%;
+  height: 68%;
+  display: block;
+  transition: transform 0.3s ease, filter 0.3s ease, opacity 0.3s ease;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.18));
 }
 
-/* ===============================
-   RESPONSIVE DESIGN
-================================ */
+/* unlocked: full colour, small pop on hover */
+.progress-page .badge.unlocked .badge-icon {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
 
-@media (max-width: 1024px) {
+.progress-page .badge.unlocked:hover .badge-icon {
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.2);
+}
+
+.progress-page .badge.unlocked:hover .badge-icon svg {
+  transform: scale(1.1) rotate(-3deg);
+}
+
+/* locked: artwork turns gray and dim, tile stays the same */
+/* .progress-page .badge:not(.unlocked) .badge-icon svg {
+  filter: grayscale(1) contrast(0.8);
+  opacity: 0.4;
+} */
+
+/* locked: keeps its colours, just a little softer, with a lock */
+.progress-page .badge:not(.unlocked) .badge-icon svg {
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.18));
+  opacity: 0.85;
+}
+
+.progress-page .badge:not(.unlocked) .badge-icon::after {
+  content: "🔒";
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+.progress-page .badge:not(.unlocked) p {
+  color: #222;
+}
+
+.progress-page .badge p {
+  margin: 10px 0 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: #222;
+}
+
+/* =========================================
+   TABLET (>= 768px)
+   ========================================= */
+@media (min-width: 768px) {
+  .progress-page {
+    padding: 24px 32px 56px;
+  }
+
+  .progress-page::before {
+    border-radius: 18px;
+  }
+
+  .page-title {
+    margin: 28px 30px 4px;
+    font-size: 28px;
+  }
+
+  .subtitle {
+    margin: 0 30px 24px;
+    font-size: 15px;
+  }
+
+  .progress-page .streak-card {
+    margin: 0 26px 26px;
+    padding: 28px 30px 24px;
+    border-radius: 18px;
+  }
+
+  .streak-header {
+    padding-bottom: 16px;
+  }
+
+  .streak-header h3 {
+    font-size: 18px;
+  }
+
+  .tabs {
+    padding: 4px;
+    border-radius: 12px;
+  }
+
+  .tabs button {
+    padding: 9px 22px;
+    font-size: 14px;
+    border-radius: 9px;
+  }
+
   .streak-body {
-    flex-direction: column;
+    margin-top: 28px;
+  }
+
+  .calendar-section {
+    flex-basis: 380px;
+    max-width: 440px;
+  }
+
+  .week-labels {
+    gap: 12px;
+    font-size: 14px;
+  }
+
+  .streak-grid {
+    gap: 12px;
+  }
+
+  .progress-page .streak-box {
+    border-radius: 9px;
+  }
+
+  .legend-section {
+    gap: 18px;
+    margin-right: 20px;
+    padding: 18px 22px;
+    border-radius: 14px;
+  }
+
+  .legend-section > div {
+    gap: 12px;
+    font-size: 14px;
+  }
+
+  .progress-page .legend-box {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+  }
+
+  .streak-summary {
+    margin-top: 26px;
+    padding: 10px 24px;
+    font-size: 15px;
+  }
+
+  .progress-page .history-card {
+    justify-self: center;
+    width: 100%;
+    max-width: 780px;
+    margin-top: 64px;
+    padding: 22px 30px 18px;
+    border-radius: 18px;
+  }
+
+  .progress-page .history-card h3,
+  .progress-page .badges-card h3 {
+    top: -40px;
+    padding: 10px 24px;
+    font-size: 15px;
+    border-radius: 11px 11px 0 0;
+  }
+
+  .history-card th {
+    padding: 6px 0 14px;
+    font-size: 12px;
+  }
+
+  .history-card td {
+    padding: 16px 0;
+    font-size: 15px;
+  }
+
+  .progress-page .badges-card {
+    justify-self: center;
+    width: 100%;
+    max-width: 920px;
+    margin-top: 64px;
+    padding: 30px;
+    border-radius: 18px;
+  }
+
+  .badge-grid {
+    gap: 30px 26px;
+  }
+
+  .badge-icon {
+    border-radius: 28px;
+  }
+
+  .progress-page .badge:not(.unlocked) .badge-icon::after {
+    right: 12px;
+    bottom: 12px;
+    font-size: 20px;
+  }
+
+  .progress-page .badge p {
+    margin-top: 14px;
+    font-size: 15px;
+  }
+}
+
+/* =========================================
+   DESKTOP (>= 1100px)
+   ========================================= */
+@media (min-width: 1100px) {
+  .progress-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-top: 32px;
+  }
+
+  .calendar-section {
+    flex-basis: 460px;
+    max-width: 500px;
+  }
+}
+
+/* =========================================
+   VERY SMALL PHONES (< 360px)
+   ========================================= */
+@media (max-width: 359px) {
+  .progress-page .streak-card {
+    margin: 0 8px 8px;
+    padding: 12px;
+  }
+
+  .tabs button {
+    padding: 5px 7px;
+    font-size: 9px;
   }
 
   .legend-section {
     margin-left: 0;
-    margin-top: 24px;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 20px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
-  .badge-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-  .progress-page {
-    padding: 20px;
-  }
-
-  .badge-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .streak-grid {
-    gap: 8px;
-  }
-
-  .streak-box {
-    height: 28px;
+  .badge-icon {
+    border-radius: 18px;
   }
 }
