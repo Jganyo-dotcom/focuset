@@ -105,11 +105,11 @@ import { useEffect, useRef, useState } from "react";
 import { getGoals } from "../utils/goalsStorage";
 import "../styles/Profile.css";
 
-const STORAGE_KEY = "profile";
-const MAX_PHOTO_BYTES = 400 * 1024; // keeps localStorage from filling up
+const MAX_PHOTO_BYTES = 400 * 1024; // keeps localStorage/payload from filling up
+const BASE_URL = "https://capstone-project-9o17.onrender.com";
 
 const DEFAULT_PROFILE = {
-  fullName: "",
+  fullname: "",
   username: "",
   email: "",
   phone: "",
@@ -156,27 +156,65 @@ export default function Profile() {
   const [profile, setProfile] = useState(DEFAULT_PROFILE);
   const [stats, setStats] = useState({ streak: 0, completed: 0, hours: 0 });
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [apiError, setApiError] = useState("");
   const [photoError, setPhotoError] = useState("");
+
   const savedTimer = useRef(null);
   const fileInput = useRef(null);
 
   /* ===============================
-     LOAD PROFILE + LEARNING STATS
+     LOAD PROFILE + LEARNING STATS FROM BACKEND
   =============================== */
   useEffect(() => {
-    try {
-      const storedProfile = JSON.parse(localStorage.getItem(STORAGE_KEY));
-      if (storedProfile) {
-        setProfile({ ...DEFAULT_PROFILE, ...storedProfile });
-      }
-    } catch (err) {
-      console.error("Failed to load profile:", err);
-    }
+    let isMounted = true;
 
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const response = await fetch(`${BASE_URL}/student/get-profile`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        });
+
+        const data = await response.json();
+
+        if (isMounted) {
+          if (response.ok && (data.user || data.updatedProfile)) {
+            const userData = data.user || data.updatedProfile;
+            setProfile((prev) => ({
+              ...DEFAULT_PROFILE,
+              ...userData,
+              // Map backend 'name' to frontend 'fullName'
+              fullName: userData.fullName || userData.name || prev.fullName,
+              joinedAt:
+                userData.createdAt || userData.joinedAt || prev.joinedAt,
+            }));
+          } else {
+            setApiError(data.message || "Failed to load user profile.");
+          }
+        }
+      } catch (err) {
+        console.error("Failed to connect to backend:", err);
+        if (isMounted) {
+          setApiError("Network error. Could not connect to profile server.");
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchUserData();
+
+    // Load local stats (streak, completed goals, hours)
     try {
       const goals = getGoals() || [];
-
       const completed = goals.filter((g) => g.status === "Completed").length;
       const minutes = goals.reduce((acc, g) => acc + (g.progress || 0), 0);
 
@@ -191,18 +229,21 @@ export default function Profile() {
         else break;
       }
 
-      setStats({
-        streak,
-        completed,
-        hours: Math.round((minutes / 60) * 10) / 10,
-      });
+      if (isMounted) {
+        setStats({
+          streak,
+          completed,
+          hours: Math.round((minutes / 60) * 10) / 10,
+        });
+      }
     } catch (err) {
       console.error("Failed to load stats:", err);
-    } finally {
-      setLoading(false);
     }
 
-    return () => clearTimeout(savedTimer.current);
+    return () => {
+      isMounted = false;
+      clearTimeout(savedTimer.current);
+    };
   }, []);
 
   /* ===============================
@@ -242,25 +283,68 @@ export default function Profile() {
     setProfile((prev) => ({ ...prev, avatar: "" }));
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
+    setSaving(true);
+    setApiError("");
+
     try {
-      const toSave = {
-        ...profile,
-        joinedAt: profile.joinedAt || new Date().toISOString(),
+      // Fixed token key name from 'authToke' to 'authToken'
+      const token = localStorage.getItem("authToken");
+
+      // Extract ONLY the fields your backend Joi schema expects and allows
+      const payload = {
+        name: profile.fullName,
+        username: profile.username,
+        email: profile.email,
+        phone: profile.phone,
       };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
-      setProfile(toSave);
+
+      const response = await fetch(`${BASE_URL}/student/update-profile`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to update profile.");
+      }
+
+      if (data.updatedProfile) {
+        const updated = data.updatedProfile;
+        setProfile((prev) => ({
+          ...prev,
+          ...updated,
+          fullName: updated.name || prev.fullName,
+        }));
+      }
+
       setSaved(true);
       clearTimeout(savedTimer.current);
       savedTimer.current = setTimeout(() => setSaved(false), 2500);
     } catch (err) {
       console.error("Failed to save profile:", err);
-      setPhotoError("Could not save. Try a smaller photo.");
+      setApiError(err.message || "Could not save changes to backend.");
+    } finally {
+      setSaving(false);
     }
   };
 
-  if (loading) return <p style={{ padding: "24px" }}>Loading profile...</p>;
+  if (loading) {
+    return (
+      <div
+        className="profile-page"
+        style={{ padding: "32px", textAlign: "center" }}
+      >
+        <p>Loading profile...</p>
+      </div>
+    );
+  }
 
   /* ===============================
      PROFILE COMPLETENESS
@@ -277,7 +361,7 @@ export default function Profile() {
   const completion = Math.round(
     (trackedFields.filter((v) => String(v || "").trim()).length /
       trackedFields.length) *
-      100
+      100,
   );
 
   const memberSince = formatMemberSince(profile.joinedAt);
@@ -286,6 +370,12 @@ export default function Profile() {
     <div className="profile-page">
       <h2 className="profile-title">Profile</h2>
       <p className="profile-subtitle">Update your personal information</p>
+
+      {apiError && (
+        <p className="profile-error" style={{ marginBottom: "16px" }}>
+          {apiError}
+        </p>
+      )}
 
       {/* ===============================
           IDENTITY CARD
@@ -333,7 +423,9 @@ export default function Profile() {
               <span className="profile-chip">🎓 {profile.course}</span>
             )}
             {memberSince && (
-              <p className="profile-since">Learning with FocuSet since {memberSince}</p>
+              <p className="profile-since">
+                Learning with FocuSet since {memberSince}
+              </p>
             )}
           </div>
 
@@ -358,13 +450,16 @@ export default function Profile() {
             aria-valuemin="0"
             aria-valuemax="100"
           >
-            <div className="completion-fill" style={{ width: `${completion}%` }} />
+            <div
+              className="completion-fill"
+              style={{ width: `${completion}%` }}
+            />
           </div>
         </div>
       </section>
 
       {/* ===============================
-          LEARNING STATS (read-only, from your goals)
+          LEARNING STATS
       =============================== */}
       <section className="profile-stats">
         <div className="stat-tile">
@@ -398,7 +493,7 @@ export default function Profile() {
               <input
                 id="fullName"
                 name="fullName"
-                value={profile.fullName}
+                value={profile.fullName || ""}
                 onChange={handleChange}
                 placeholder="Enter full name"
                 required
@@ -410,7 +505,7 @@ export default function Profile() {
               <input
                 id="username"
                 name="username"
-                value={profile.username}
+                value={profile.username || ""}
                 onChange={handleChange}
                 placeholder="Enter username"
                 required
@@ -423,7 +518,7 @@ export default function Profile() {
                 id="email"
                 type="email"
                 name="email"
-                value={profile.email}
+                value={profile.email || ""}
                 onChange={handleChange}
                 placeholder="Enter email"
                 required
@@ -435,7 +530,7 @@ export default function Profile() {
               <input
                 id="phone"
                 name="phone"
-                value={profile.phone}
+                value={profile.phone || ""}
                 onChange={handleChange}
                 placeholder="+234 801 234 5678"
               />
@@ -450,11 +545,13 @@ export default function Profile() {
                 name="bio"
                 rows="3"
                 maxLength={160}
-                value={profile.bio}
+                value={profile.bio || ""}
                 onChange={handleChange}
                 placeholder="What are you learning and why?"
               />
-              <span className="char-count">{profile.bio.length}/160</span>
+              <span className="char-count">
+                {(profile.bio || "").length}/160
+              </span>
             </div>
           </div>
         </fieldset>
@@ -469,7 +566,7 @@ export default function Profile() {
               <input
                 id="course"
                 name="course"
-                value={profile.course}
+                value={profile.course || ""}
                 onChange={handleChange}
                 placeholder="e.g. Software Engineering"
               />
@@ -480,7 +577,7 @@ export default function Profile() {
               <select
                 id="studyGoalMinutes"
                 name="studyGoalMinutes"
-                value={profile.studyGoalMinutes}
+                value={profile.studyGoalMinutes || "60"}
                 onChange={handleChange}
               >
                 <option value="30">30 minutes</option>
@@ -496,7 +593,7 @@ export default function Profile() {
               <select
                 id="preferredTime"
                 name="preferredTime"
-                value={profile.preferredTime}
+                value={profile.preferredTime || "Evening"}
                 onChange={handleChange}
               >
                 <option>Morning</option>
@@ -522,7 +619,7 @@ export default function Profile() {
                 id="reminders"
                 type="checkbox"
                 name="reminders"
-                checked={profile.reminders}
+                checked={!!profile.reminders}
                 onChange={handleChange}
               />
               <span className="slider" />
@@ -532,14 +629,16 @@ export default function Profile() {
           <label className="switch-row" htmlFor="gentleMotivation">
             <span>
               <strong>Gentle motivation</strong>
-              <small>Encouragement that keeps you going, without pressure</small>
+              <small>
+                Encouragement that keeps you going, without pressure
+              </small>
             </span>
             <span className="switch">
               <input
                 id="gentleMotivation"
                 type="checkbox"
                 name="gentleMotivation"
-                checked={profile.gentleMotivation}
+                checked={!!profile.gentleMotivation}
                 onChange={handleChange}
               />
               <span className="slider" />
@@ -547,13 +646,13 @@ export default function Profile() {
           </label>
         </fieldset>
 
-        <button type="submit" className="save-btn">
-          Save Changes
+        <button type="submit" className="save-btn" disabled={saving}>
+          {saving ? "Saving..." : "Save Changes"}
         </button>
 
         {saved && (
           <p className="success-text" role="status">
-            ✓ Profile saved successfully
+            ✓ Profile saved successfully to database
           </p>
         )}
       </form>
